@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->text('photo_url')->nullable();
             $table->tinyInteger('uses_two_factor_auth')->default(0);
             $table->string('authy_id')->nullable();
+            $table->string('iota_seed')->nullable();
             $table->string('country_code', 10)->nullable();
             $table->string('phone', 25)->nullable();
             $table->string('two_factor_reset_code', 100)->nullable();
