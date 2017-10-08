@@ -34,6 +34,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     @includeIf('spark::nav.user-right')
 
+
                     <!-- Notifications -->
                     <li>
                         <a @click="showNotifications" class="has-activity-indicator">

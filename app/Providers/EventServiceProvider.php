@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\PaymentCompleted;
+use App\Events\PaymentCreated;
+use App\Listeners\CreateIotaSeed;
+use App\Listeners\PaymentCompletedListener;
+use App\Listeners\PaymentCreatedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -14,6 +19,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         // User Related Events...
         'Laravel\Spark\Events\Auth\UserRegistered' => [
+            CreateIotaSeed::class,
             'Laravel\Spark\Listeners\Subscription\CreateTrialEndingNotification',
         ],
 
@@ -43,7 +49,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         // Team Related Events...
-        'Laravel\Spark\Events\Teams\TeamCreated' => [
+        'Laravel\Spark\Events\Teams\TeamCreated'                  => [
             'Laravel\Spark\Listeners\Teams\Subscription\CreateTrialEndingNotification',
         ],
 
@@ -63,6 +69,14 @@ class EventServiceProvider extends ServiceProvider
         'Laravel\Spark\Events\Teams\UserInvitedToTeam' => [
             'Laravel\Spark\Listeners\Teams\CreateInvitationNotification',
         ],
+
+        PaymentCreated::class => [
+            PaymentCreatedListener::class
+        ],
+
+        PaymentCompleted::class => [
+            PaymentCompletedListener::class
+        ]
     ];
 
     /**

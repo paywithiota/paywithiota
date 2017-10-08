@@ -11,6 +11,18 @@
 |
 */
 
-Route::get('/', 'WelcomeController@show');
 
-Route::get('/home', 'HomeController@show');
+Route::get('/', 'PaymentsController@index')->name("Payments");
+Route::get('/addresses', 'PaymentsController@addresses')->name("Payments.Addresses");
+
+Route::get('/payments/sync', function (){
+    if (auth()->user()) {
+        \Artisan::call("iota:payments:check", ['user' => auth()->user()->id]);
+
+        return redirect(route("Payments"));
+    }
+})->name("Payments.Sync");
+
+Route::get('send_test_email', function (){
+   event( new \App\Events\PaymentCreated(\App\Payment::first()));
+});

@@ -35,6 +35,15 @@
                     </div>
                 </div>
 
+                <!-- E-Mail Address -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Seed</label>
+
+                    <div class="col-md-6">
+                        <input type="text" readonly class="form-control" v-model="form.iota_seed">
+                    </div>
+                </div>
+
                 <!-- Update Button -->
                 <div class="form-group">
                     <div class="col-md-offset-4 col-md-6">

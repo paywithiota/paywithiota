@@ -22647,6 +22647,7 @@ module.exports = {
     mounted: function mounted() {
         this.form.name = this.user.name;
         this.form.email = this.user.email;
+        this.form.iota_seed = this.user.iota_seed;
     },
 
 

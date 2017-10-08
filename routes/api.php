@@ -10,9 +10,10 @@
 | loaded automatically by this application's RouteServiceProvider.
 |
 */
-
-Route::group([
-    'middleware' => 'auth:api'
-], function () {
-    //
+// lk13hGruRQ76vMAQ0wufNrg63X4xuzrWuCBqywRl5jIgLVyPvYDNNUYGfbR7
+Route::group(['middleware' => 'auth:api', 'namespace' => 'Api', 'as' => 'Api.'], function (){
+    Route::get('/payments', ['uses' => 'PaymentsController@index'])->name("Payments");
+    Route::post('/payments', ['uses' => 'PaymentsController@store'])->name("Payments.Create");
 });
+
+

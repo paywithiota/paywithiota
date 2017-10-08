@@ -44,7 +44,26 @@ class User extends SparkUser
      * @var array
      */
     protected $casts = [
-        'trial_ends_at' => 'datetime',
+        'trial_ends_at'        => 'datetime',
         'uses_two_factor_auth' => 'boolean',
     ];
+
+    /**
+     * User has many payments
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'user_id');
+    }
+
+    /**
+     * User has many addresses
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function addresses()
+    {
+        return $this->hasMany(Address::class, 'user_id');
+    }
+
 }

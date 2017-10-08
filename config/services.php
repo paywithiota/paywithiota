@@ -35,4 +35,8 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'iota' => [
+        'donation_address' => env('IOTA_DONATION_ADDRESS')
+    ]
+
 ];

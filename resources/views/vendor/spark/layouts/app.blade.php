@@ -17,9 +17,9 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
-    @yield('scripts', '')
+@yield('scripts', '')
 
-    <!-- Global Spark Object -->
+<!-- Global Spark Object -->
     <script>
         window.Spark = <?php echo json_encode(array_merge(
             Spark::scriptVariables(), []
@@ -27,27 +27,36 @@
     </script>
 </head>
 <body class="with-navbar">
-    <div id="spark-app" v-cloak>
-        <!-- Navigation -->
-        @if (Auth::check())
-            @include('spark::nav.user')
-        @else
-            @include('spark::nav.guest')
-        @endif
+<div id="spark-app" v-cloak>
+    <!-- Navigation -->
+@if (Auth::check())
+    @include('spark::nav.user')
+@else
+    @include('spark::nav.guest')
+@endif
 
-        <!-- Main Content -->
-        @yield('content')
+<!-- Main Content -->
+@yield('content')
 
-        <!-- Application Level Modals -->
-        @if (Auth::check())
-            @include('spark::modals.notifications')
-            @include('spark::modals.support')
-            @include('spark::modals.session-expired')
-        @endif
+<!-- Application Level Modals -->
+    @if (Auth::check())
+        @include('spark::modals.notifications')
+        @include('spark::modals.support')
+        @include('spark::modals.session-expired')
+    @endif
+</div>
+
+@if(config('services.iota.donation_address'))
+    <div class="container">
+        <div class="input-group">
+            <span class="input-group-addon">Donations&nbsp;<i class="fa fa-heart"></i></span>
+            <input type="text" class="form-control"
+                   value="{{ config('services.iota.donation_address') }}" readonly="">
+        </div>
     </div>
-
-    <!-- JavaScript -->
-    <script src="{{ mix('js/app.js') }}"></script>
-    <script src="/js/sweetalert.min.js"></script>
+@endif
+<!-- JavaScript -->
+<script src="{{ mix('js/app.js') }}"></script>
+<script src="/js/sweetalert.min.js"></script>
 </body>
 </html>
