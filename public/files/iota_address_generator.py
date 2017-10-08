@@ -45,7 +45,7 @@ def address_checksum(address):
     address = str(addy.with_valid_checksum())
     return address
 
-uri = "https://iotanode.prizziota.com/"
+uri = "http://iota.bitfinex.com/"
 index = int(sys.argv[2])
 count = None
 seed =  sys.argv[1]

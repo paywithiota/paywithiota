@@ -13,6 +13,7 @@
 
 
 Route::get('/', 'PaymentsController@index')->name("Payments");
+Route::get('/home', 'PaymentsController@index')->name("Home");
 Route::get('/addresses', 'PaymentsController@addresses')->name("Payments.Addresses");
 
 Route::get('/payments/sync', function (){
