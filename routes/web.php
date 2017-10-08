@@ -23,7 +23,3 @@ Route::get('/payments/sync', function (){
         return redirect(route("Payments"));
     }
 })->name("Payments.Sync");
-
-Route::get('send_test_email', function (){
-   event( new \App\Events\PaymentCreated(\App\Payment::first()));
-});
