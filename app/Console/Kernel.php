@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('iota:payments:check')->everyFiveMinutes();
+        $schedule->command('iota:payments:check')->everyFifteenMinutes();
     }
 
     /**
