@@ -36,6 +36,7 @@ return [
     ],
 
     'iota' => [
+        'node_url' => env('IOTA_NODE_URL'),
         'donation_address' => env('IOTA_DONATION_ADDRESS')
     ]
 

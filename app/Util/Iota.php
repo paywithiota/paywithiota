@@ -8,7 +8,7 @@ namespace App\Util;
  */
 class Iota
 {
-    private $nodeUrl = 'https://iotanode.prizziota.com/';
+    private $nodeUrl = '';
 
     /**
      * Iota constructor.
@@ -20,6 +20,14 @@ class Iota
         // Set Node url
         if ($nodeUrl) {
             $this->nodeUrl = $nodeUrl;
+        }
+        elseif(config('services.iota.node_url'))
+        {
+            $this->nodeUrl = config('services.iota.node_url');
+        }
+        else
+        {
+            $this->nodeUrl = 'https://iotanode.prizziota.com/'
         }
     }
 
