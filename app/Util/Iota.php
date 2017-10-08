@@ -27,7 +27,7 @@ class Iota
         }
         else
         {
-            $this->nodeUrl = 'https://iotanode.prizziota.com/'
+            $this->nodeUrl = 'https://iotanode.prizziota.com/';
         }
     }
 
