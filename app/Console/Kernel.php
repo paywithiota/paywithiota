@@ -25,7 +25,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //        $schedule->command('iota:payments:check')->everyMinute();
+        if (config('app.env') == 'production') {
+            $schedule->command('iota:payments:check')->everyFiveMinutes();
+        }
     }
 
     /**
