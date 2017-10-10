@@ -121,7 +121,7 @@ class PaymentsController extends Controller
                 'price_usd'        => $priceUsd,
                 'price_iota'       => $priceIota,
                 'ipn'              => $ipnUrl,
-                'ipn_verify_code'  => $ipnVerifyCode,
+                'ipn_verify_code'  => $ipnVerifyCode ? $ipnVerifyCode : '',
                 'address_id'       => $address->id,
                 'transaction_hash' => '',
                 'metadata'         => $customVariables ? $customVariables : [],
