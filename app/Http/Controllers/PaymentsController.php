@@ -14,9 +14,20 @@ class PaymentsController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
-        $this->middleware('auth')->except(['pay', 'payNow', 'buy', 'product']);
+        $except = [
+            'payNow',
+            'buy',
+            'product'
+        ];
+
+        // Login
+        if ( ! $request->user() && ! $request->get('login')) {
+            $except[] = 'pay';
+        }
+
+        $this->middleware('auth')->except($except);
     }
 
     /**

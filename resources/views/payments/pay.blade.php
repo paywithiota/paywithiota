@@ -60,9 +60,24 @@
                     </table>
 
                     <div class="form-group">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" class="pay_with_input" data-login="{{ isset($user) && $user ? '1' : '0' }}" name="pay_with"
+                                       value="account" {{ isset($user) && $user ? 'checked' : '' }}>paywithiota.com
+                                account {{ isset($user) && $user ? '' : '(Login Required)' }}</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" class="pay_with_input" name="pay_with"
+                                          value="seed" {{ isset($user) && $user ? '' : 'checked' }}>Seed</label>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group pay_with_seed" style="display:{{ isset($user) && $user ? 'none' : '' }}">
                         <label for="customSeed">Input your Seed: (FKBIFSVNUOTIAJYZHMCOOJ9JXXGCLXYMZUTNMSBPAZXFGRFGVDULNIUDSTZZ9ACWPPVHABKMMXMMX9HJU)</label>
                         <input type="password" value="" class="form-control" id="customSeed">
                     </div>
+
                     <button id="payNow" type="button" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"
                             class="btn btn-success btn-lg btn-block" data-ready-text='Pay Now <span class="glyphicon glyphicon-chevron-right"></span>' disabled>
                         <i class='fa fa-circle-o-notch fa-spin'></i> Connecting to IOTA Network
@@ -77,6 +92,44 @@
 @section('before-body-end')
     <script src="{{ asset('/js/iota.js') }}"></script>
     <script>
+        var queryParam = function( uri, key, value )
+        {
+            var re = new RegExp( "([?&])" + key + "=.*?(&|$)", "i" );
+            var separator = uri.indexOf( '?' ) !== - 1 ? "&" : "?";
+            if( uri.match( re ) )
+            {
+                return uri.replace( re, '$1' + key + "=" + value + '$2' );
+            }
+            else
+            {
+                return uri + separator + key + "=" + value;
+            }
+        };
+
+        $( document ).on( "click", '.pay_with_input', function()
+        {
+            if( $( this ).val() === 'account' )
+            {
+                $( '.pay_with_seed' ).hide();
+
+                if( ! $( this ).data( 'login' ) )
+                {
+                    if( confirm( "You will be redirected to login page, Do you want to continue?" ) )
+                    {
+                        window.location.href = queryParam( window.location.href, 'login', 1 );
+                    }
+                    else
+                    {
+                        $( '.pay_with_input[value="seed"]' ).prop( "checked", true );
+                        $( '.pay_with_seed' ).show();
+                    }
+                }
+            }
+            else
+            {
+                $( '.pay_with_seed' ).show()
+            }
+        } );
 
         $( document ).ready( function()
         {
