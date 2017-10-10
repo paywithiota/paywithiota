@@ -23,3 +23,8 @@ Route::get('/payments/sync', function (){
         return redirect(route("Payments"));
     }
 })->name("Payments.Sync");
+
+Route::get("/pay", ['uses' => "PaymentsController@pay"])->name("Payments.Pay");
+Route::post("/pay", ['uses' => "PaymentsController@payNow"])->name("Payments.PayNow");
+Route::get("/product", ['uses' => "PaymentsController@product"])->name("Product");
+Route::post("/buy", ['uses' => "PaymentsController@buy"])->name("Buy.Post");

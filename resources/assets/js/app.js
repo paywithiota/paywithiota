@@ -21,3 +21,5 @@ require('./components/bootstrap');
 var app = new Vue({
     mixins: [require('spark')]
 });
+
+//require( '../../../node_modules/iota.lib.js/lib/iota' );
