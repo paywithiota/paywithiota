@@ -42,7 +42,7 @@
                             <div class="form-group">
                                 <label>Api Token:</label>
                                 <input placeholder="API Token" required type="text" name="api_token"
-                                       value="8eqGV8GAeuhMv9PUWUQNMzDNpE6Mon8LaB1A7Gq2TKguR7lwLkfR8w6VgT77"></div>
+                                       value="hDdKoue1ooTEnyGA5L4ikLL3MeBPvOXnAA9uQ0Y2rg55QHUYvRsGer01PpNT"></div>
 
                             <div class="form-group">
                                 <label>Invoice Id:</label>
