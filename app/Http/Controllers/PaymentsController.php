@@ -128,9 +128,10 @@ class PaymentsController extends Controller
                         'custom_var_time' => time()
                     ]
                 ]
-            ]);
+            ]);print_r($payment);die;
 
-            if ($payment && $payment->status == 1 && $payment->data->payment_id) {
+            // Todo address not created
+            if ($payment && isset($payment->status) && $payment->status == 1 && $payment->data->payment_id) {
                 return redirect(route("Payments.Pay", [
                     'return_url' => $request->get('return_url'),
                     'payment_id' => $payment->data->payment_id,

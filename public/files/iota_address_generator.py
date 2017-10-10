@@ -45,7 +45,7 @@ def address_checksum(address):
     address = str(addy.with_valid_checksum())
     return address
 
-uri = "http://iota.bitfinex.com/"
+uri = "https://node.tangle.works:443"
 index = int(sys.argv[2])
 count = None
 seed =  sys.argv[1]
