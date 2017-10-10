@@ -88,7 +88,7 @@
                 var canPay = false;
                 var $payNowButton = $( '#payNow' );
                 var transferInputs;
-                var seed = "{{ $user ? $user->iota_seed : '' }}";
+                var seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}";
 
                 const httpProviders = [
                     "https://node.tangle.works:443"
