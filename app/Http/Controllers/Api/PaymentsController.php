@@ -100,6 +100,9 @@ class PaymentsController extends Controller
         // IPN Url {This url is called when a payment is processed}
         $ipnUrl = $request->get('ipn');
 
+        // IPN Code {This code is returned with ipn}
+        $ipnVerifyCode = $request->get('ipn_verify_code');
+
         // Custom variables
         $customVariables = array_where($request->all(), function ($value, $key){
             return starts_with($key, 'custom_var_');
@@ -118,6 +121,7 @@ class PaymentsController extends Controller
                 'price_usd'        => $priceUsd,
                 'price_iota'       => $priceIota,
                 'ipn'              => $ipnUrl,
+                'ipn_verify_code'  => $ipnVerifyCode,
                 'address_id'       => $address->id,
                 'transaction_hash' => '',
                 'metadata'         => $customVariables ? $customVariables : [],

@@ -24,6 +24,7 @@ class CreatePaymentsTable extends Migration
             $table->double('price_usd')->nullable();
             $table->double('price_iota')->nullable();
             $table->text('ipn')->nullable();
+            $table->string('ipn_verify_code')->nullable();
 
             if ($this->version() >= '5.7.8') {
                 $table->json('metadata')->default(null);

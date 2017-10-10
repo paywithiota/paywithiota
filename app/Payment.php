@@ -17,6 +17,7 @@ class Payment extends Model
         'transaction_hash',
         'price_usd',
         'ipn',
+        'ipn_verify_code',
         'price_iota',
         'metadata',
         'status',

@@ -108,11 +108,12 @@ class PaymentsController extends Controller
                 'METHOD' => 'POST',
                 'URL'    => route("Api.Payments.Create", ['api_token' => $request->get('api_token')]),
                 'DATA'   => [
-                    'invoice_id' => $request->get('invoice_id'),
-                    'price_usd'  => $request->get('price_usd'),
-                    'price_iota' => $request->get('price_iota'),
-                    'ipn'        => $request->get('ipn'),
-                    'metadata'   => [
+                    'invoice_id'      => $request->get('invoice_id'),
+                    'price_usd'       => $request->get('price_usd'),
+                    'price_iota'      => $request->get('price_iota'),
+                    'ipn'             => $request->get('ipn'),
+                    'ipn_verify_code' => $request->get('ipn_verify_code'),
+                    'metadata'        => [
                         'custom_var_time' => time()
                     ]
                 ]

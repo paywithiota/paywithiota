@@ -64,7 +64,7 @@ class PaymentChecker extends Command
                     $payment->update(['status' => 1]);
 
                     // If IPN URL exists, call it
-                    if ( $payment->ipn) {
+                    if ($payment->ipn) {
                         try{
                             (new Iota())->call([
                                 'URL'    => $payment->ipn,
@@ -78,6 +78,7 @@ class PaymentChecker extends Command
                                     'price_usd'       => $payment->price_usd,
                                     'price_iota'      => $payment->price_usd,
                                     'ipn'             => $payment->ipn,
+                                    'ipn_verify_code' => $payment->ipn_verify_code,
                                     'custom'          => $payment->metadata,
                                     'created_at'      => $payment->created_at,
                                     'updated_at'      => $payment->updated_at
