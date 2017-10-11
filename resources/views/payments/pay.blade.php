@@ -148,7 +148,7 @@
                 var seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}";
                 $( '#qrcode' ).qrcode( {width: 75, height: 75, text: address} );
 
-                return;
+
                 const httpProviders = [
                     "https://node.tangle.works:443"
                 ];
