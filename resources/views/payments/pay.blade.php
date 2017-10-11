@@ -69,6 +69,11 @@
                                 account {{ isset($user) && $user ? '' : '(Login Required)' }}</label>
                         </div>
                         <div class="radio">
+                            <label>
+                                <input type="radio" class="pay_with_input" name="pay_with"
+                                       value="direct">Pay directly to Address/QR code</label>
+                        </div>
+                        <div class="radio">
                             <label><input type="radio" class="pay_with_input" name="pay_with"
                                           value="seed" {{ isset($user) && $user ? '' : 'checked' }}>Seed</label>
                         </div>
@@ -95,6 +100,14 @@
     <script src="{{ asset('/js/iota.js') }}"></script>
     <script src="{{ asset('/js/jquery.qrcode.min.js') }}"></script>
     <script>
+
+        var amount = '{{ $payment->price_iota }}';
+        var address = "{{ $payment->address->address }}";
+        var returnUrl = "{{ isset($returnUrl) ? $returnUrl : '' }}";
+        var canPay = false;
+        var $payNowButton = $( '#payNow' );
+        var transferInputs;
+        var seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}";
 
         var queryParam = function( uri, key, value )
         {
@@ -129,6 +142,23 @@
                     }
                 }
             }
+            else if( $( this ).val() == 'direct' )
+            {
+                $( '.pay_with_seed' ).hide();
+
+                if( confirm( "You will be redirected to merchant website's order thank you page. Click OK if you've already sent the money OR cancel to send now." ) )
+                {
+                    if( returnUrl )
+                    {
+                        window.location.href = returnUrl;
+                    }
+                    else
+                    {
+                        alert( "Thank you for your payment. We will send an email to merchant once the payment is verified." );
+                        window.location.href = '/';
+                    }
+                }
+            }
             else
             {
                 $( '.pay_with_seed' ).show()
@@ -139,15 +169,7 @@
         {
             setTimeout( function()
             {
-                var amount = '{{ $payment->price_iota }}';
-                var address = "{{ $payment->address->address }}";
-                var returnUrl = "{{ isset($returnUrl) ? $returnUrl : '' }}";
-                var canPay = false;
-                var $payNowButton = $( '#payNow' );
-                var transferInputs;
-                var seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}";
                 $( '#qrcode' ).qrcode( {width: 100, height: 100, text: address} );
-
 
                 const httpProviders = [
                     "https://node.tangle.works:443"
