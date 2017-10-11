@@ -251,7 +251,7 @@
                         }
                         else
                         {
-                            alert( "Error: " + error );
+                            alert( "Error: Not enough balance" );
                         }
                     } )
                 }
