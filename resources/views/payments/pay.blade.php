@@ -146,6 +146,8 @@
                     else
                     {
                         $( '.pay_with_input[value="direct"]' ).prop( "checked", true );
+                        $( '#payNowWithAddress' ).show();
+                        $payNowButton.hide();
                     }
                 }
             }
