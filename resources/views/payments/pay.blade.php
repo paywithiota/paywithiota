@@ -80,14 +80,20 @@
                     </div>
 
 
-                    <div class="form-group pay_with_seed" style="display:{{ isset($user) && $user ? 'none' : '' }}">
+                    <div class="form-group pay_with_seed" style="display:none;">
                         <label for="customSeed">Input your Seed: (FKBIFSVNUOTIAJYZHMCOOJ9JXXGCLXYMZUTNMSBPAZXFGRFGVDULNIUDSTZZ9ACWPPVHABKMMXMMX9HJU)</label>
                         <input type="password" placeholder="SEED" value="" class="form-control" id="customSeed">
                     </div>
 
-                    <button id="payNow" type="button" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"
+                    <button style="{{ isset($user) && $user ? '' : 'display:none;' }}" id="payNow" type="button"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"
                             class="btn btn-success btn-lg btn-block" data-ready-text='Pay Now <span class="glyphicon glyphicon-chevron-right"></span>' disabled>
                         <i class='fa fa-circle-o-notch fa-spin'></i> Connecting to IOTA Network
+                    </button>
+
+                    <button id="payNowWithAddress" type="button" style="{{ isset($user) && $user ? 'display:none;' : '' }}"
+                            class="btn btn-success btn-lg btn-block">
+                        Paid to Address directly
                     </button>
                 </div>
             </div>
@@ -127,6 +133,8 @@
         {
             if( $( this ).val() === 'account' )
             {
+                $( '#payNowWithAddress' ).hide();
+                $payNowButton.show();
                 $( '.pay_with_seed' ).hide();
 
                 if( ! $( this ).data( 'login' ) )
@@ -143,8 +151,24 @@
             }
             else if( $( this ).val() == 'direct' )
             {
+                $( '#payNowWithAddress' ).show();
+                $payNowButton.hide();
                 $( '.pay_with_seed' ).hide();
+                alert( "Please scan the QR code and send " + amount + " IOTA" );
+            }
+            else
+            {
+                $( '#payNowWithAddress' ).hide();
+                $payNowButton.show();
+                $( '.pay_with_seed' ).show()
+            }
+        } );
 
+        $( document ).ready( function()
+        {
+
+            $( document ).on( 'click', '#payNowWithAddress', function()
+            {
                 if( confirm( "You will be redirected to merchant website's order thank you page. Click OK if you've already sent the money OR cancel to send now." ) )
                 {
                     if( returnUrl )
@@ -157,15 +181,8 @@
                         window.location.href = '/';
                     }
                 }
-            }
-            else
-            {
-                $( '.pay_with_seed' ).show()
-            }
-        } );
+            } );
 
-        $( document ).ready( function()
-        {
             setTimeout( function()
             {
                 $( '#qrcode' ).qrcode( {width: 100, height: 100, text: address} );
