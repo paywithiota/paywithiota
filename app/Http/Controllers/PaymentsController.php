@@ -43,19 +43,6 @@ class PaymentsController extends Controller
     }
 
     /**
-     * Addresses
-     *
-     * @return View
-     */
-    public function addresses(Request $request)
-    {
-        $user = auth()->user();
-        $addresses = $user->addresses()->orderby('id', 'asc')->get();
-
-        return view('payments.addresses', compact('addresses', 'user'));
-    }
-
-    /**
      * Pay with IOTA
      *
      * @param Request $request
@@ -67,9 +54,14 @@ class PaymentsController extends Controller
         $user = auth()->user();
 
         if ($paymentId) {
-            $payment = Payment::whereId(base64_decode($paymentId))->whereStatus(0)->first();
+            $payment = Payment::whereId(base64_decode($paymentId))->first();
 
             if ($payment) {
+
+                if ($payment->status == 1) {
+                    return $returnUrl ? redirect($returnUrl) : redirect(route("Home"));
+                }
+
                 return view("payments.pay", compact('payment', 'returnUrl', 'user'));
             }
         }

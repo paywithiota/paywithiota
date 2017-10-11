@@ -32,8 +32,10 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td class="col-md-6"><a href="https://iotasear.ch/hash/{{$payment->address->address}}"
-                                                    target="_blank">{{ substr($payment->address->address, 0, 10) . '.....' .  substr($payment->address->address, -10, strlen($payment->address->address)) }}</a>
+                            <td class="col-md-6">
+                                <div id="qrcode" class="pull-left"></div>
+                                <a class="pull-right" href="https://iotasear.ch/hash/{{$payment->address->address}}"
+                                   target="_blank">{{ substr($payment->address->address, 0, 10) . '.....' .  substr($payment->address->address, -10, strlen($payment->address->address)) }}</a>
                             </td>
                             <td class="col-md-2 text-center">{{ $payment->price_iota }}</td>
                             <td class="col-md-3 text-center">{{ $payment->price_iota }} IOTA</td>
@@ -91,7 +93,9 @@
 
 @section('before-body-end')
     <script src="{{ asset('/js/iota.js') }}"></script>
+    <script src="{{ asset('/js/jquery.qrcode.min.js') }}"></script>
     <script>
+
         var queryParam = function( uri, key, value )
         {
             var re = new RegExp( "([?&])" + key + "=.*?(&|$)", "i" );
@@ -142,7 +146,9 @@
                 var $payNowButton = $( '#payNow' );
                 var transferInputs;
                 var seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}";
+                $( '#qrcode' ).qrcode( {width: 75, height: 75, text: address} );
 
+                return;
                 const httpProviders = [
                     "https://node.tangle.works:443"
                 ];
