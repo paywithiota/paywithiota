@@ -71,11 +71,11 @@
                         <div class="radio">
                             <label>
                                 <input type="radio" class="pay_with_input" name="pay_with"
-                                       value="direct">Pay directly to Address/QR code</label>
+                                       value="direct" {{ isset($user) && $user ? '' : 'checked' }}>Pay directly to Address/QR code</label>
                         </div>
                         <div class="radio">
                             <label><input type="radio" class="pay_with_input" name="pay_with"
-                                          value="seed" {{ isset($user) && $user ? '' : 'checked' }}>Seed</label>
+                                          value="seed">Seed</label>
                         </div>
                     </div>
 
@@ -137,8 +137,7 @@
                     }
                     else
                     {
-                        $( '.pay_with_input[value="seed"]' ).prop( "checked", true );
-                        $( '.pay_with_seed' ).show();
+                        $( '.pay_with_input[value="direct"]' ).prop( "checked", true );
                     }
                 }
             }
@@ -396,7 +395,11 @@
                 }
 
                 // Get balance for user
-                getBalance();
+                if( $( '.pay_with_input:checked' ).val() != 'direct' )
+                {
+
+                    getBalance();
+                }
             }, 2000 );
         } );
 
