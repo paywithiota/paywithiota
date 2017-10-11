@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Events\PaymentCreated;
 use App\Util\Iota;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 
 class PaymentsController extends Controller
@@ -88,14 +89,24 @@ class PaymentsController extends Controller
         // Iota Address
         $address = (new Iota())->generateAddress(auth()->user()->iota_seed, auth()->user()->payments()->count());
 
+        // Price
+        $price = $request->get('price');
+
+        // Currency
+        $currency = trim(strtoupper($request->get('currency')));
+
         // Price in USD
         $priceUsd = $request->get('price_usd');
 
         // Price in iota
         $priceIota = $request->get('price_iota');
 
+        if ( ! $priceUsd && ! $priceIota && $price && $currency) {
+            $priceUsd = (new Iota())->convertCurrency($price, $currency, 'USD');
+        }
+
         // Current Price in iota if not passed by api
-        $priceIota = $priceIota > 0 ? $priceIota : (new Iota())->getPrice($priceUsd, 'IOTA');
+        $priceIota = $priceIota > 0 ? $priceIota : ($priceUsd ? (new Iota())->getPrice($priceUsd, 'IOTA') : null);
 
         // IPN Url {This url is called when a payment is processed}
         $ipnUrl = $request->get('ipn');
@@ -108,12 +119,44 @@ class PaymentsController extends Controller
             return starts_with($key, 'custom_var_');
         });
 
-        if ($address) {
+        $customVariables = $customVariables ? $customVariables : [];
+
+        // Save custom price and currency
+        if ($price && $currency) {
+            $customVariables = array_merge($customVariables, [
+                'price'    => $price,
+                'currency' => $currency,
+            ]);
+        }
+
+        // Validation Rules
+        $rules = array(
+            'address'    => 'required',
+            'price_iota' => 'required',
+        );
+
+        // Create a new validator instance.
+        $validator = Validator::make([
+            'address'    => $address,
+            'price_iota' => $priceIota
+        ], $rules, [
+            'address.required'    => 'IOTA address could not be generated. Please try again later.',
+            'price_iota.required' => "Price is required and cannot be empty."
+        ]);
+
+        // If validation fails
+        if ($validator->fails()) {
+
+            $errors = $validator->messages();
+            $response['errors'] = $errors;
+
+        }else {
 
             // Save Address
             $address = auth()->user()->addresses()->create([
                 'address' => $address
             ]);
+
 
             // Create payment
             $payment = auth()->user()->payments()->create([
@@ -131,6 +174,7 @@ class PaymentsController extends Controller
 
             if ($payment) {
 
+                $metadata = $payment->metadata;
                 // Set response data
                 $response['data'] = [
                     'payment_id' => base64_encode($payment->id),
@@ -150,8 +194,6 @@ class PaymentsController extends Controller
                 // [Event]
                 event(new PaymentCreated($payment, []));
             }
-        }else {
-            $response['errors'][] = "IOTA Address couldn't be generated.";
         }
 
         return response()->json($response);

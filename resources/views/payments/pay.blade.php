@@ -77,7 +77,7 @@
 
                     <div class="form-group pay_with_seed" style="display:{{ isset($user) && $user ? 'none' : '' }}">
                         <label for="customSeed">Input your Seed: (FKBIFSVNUOTIAJYZHMCOOJ9JXXGCLXYMZUTNMSBPAZXFGRFGVDULNIUDSTZZ9ACWPPVHABKMMXMMX9HJU)</label>
-                        <input type="password" value="" class="form-control" id="customSeed">
+                        <input type="password" placeholder="SEED" value="" class="form-control" id="customSeed">
                     </div>
 
                     <button id="payNow" type="button" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"

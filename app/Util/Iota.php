@@ -20,13 +20,9 @@ class Iota
         // Set Node url
         if ($nodeUrl) {
             $this->nodeUrl = $nodeUrl;
-        }
-        elseif(config('services.iota.node_url'))
-        {
+        }elseif (config('services.iota.node_url')) {
             $this->nodeUrl = config('services.iota.node_url');
-        }
-        else
-        {
+        }else {
             $this->nodeUrl = 'https://iotanode.prizziota.com/';
         }
     }
@@ -178,6 +174,33 @@ class Iota
     }
 
     /**
+     * @param $amount
+     * @param $fromCurrency
+     * @param $toCurrency
+     *
+     * @return float
+     */
+    public function convertCurrency($amount, $fromCurrency, $toCurrency)
+    {
+        try{
+            $url = "https://finance.google.com/finance/converter?a=$amount&from=$fromCurrency&to=$toCurrency";
+            $data = $this->call([
+                "URL"     => $url,
+                'ALLDATA' => true
+            ]);
+
+            preg_match("/<span class=bld>(.*)<\/span>/", $data->_RESPONSE, $converted);
+            $converted = trim(preg_replace("/[^0-9.]/", "", $converted[1]));
+
+            return round($converted, 3);
+        }catch (\Exception $e){
+
+        }
+
+        return null;
+    }
+
+    /**
      * Call with Curl
      *
      * @param array $userData
@@ -205,8 +228,14 @@ class Iota
 
         // Send & accept JSON data
         $defaultHeaders = array();
-        $defaultHeaders[] = 'Content-Type: application/json; charset=' . $request['CHARSET'];
-        $defaultHeaders[] = 'Accept: application/json';
+
+        if (isset($request['SKIP_DEFAULT_HEADERS']) && $request['SKIP_DEFAULT_HEADERS']) {
+
+        }else {
+            $defaultHeaders[] = 'Content-Type: application/json; charset=' . $request['CHARSET'];
+            $defaultHeaders[] = 'Accept: application/json';
+        }
+
 
         $headers = array_merge($defaultHeaders, $request['HEADERS']);
 
@@ -220,7 +249,7 @@ class Iota
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_CUSTOMREQUEST  => strtoupper($request['METHOD']),
             CURLOPT_ENCODING       => '',
-            CURLOPT_USERAGENT      => 'Yopify/Yo/PHP',
+            CURLOPT_USERAGENT      => 'PWI/PHP',
             CURLOPT_FAILONERROR    => $request['FAILONERROR'],
             CURLOPT_VERBOSE        => $request['ALLDATA'],
             CURLOPT_HEADER         => 1,
@@ -279,9 +308,11 @@ class Iota
         if ($request['ALLDATA']) {
             if ($request['RETURNARRAY']) {
                 $result['_ERROR'] = $_ERROR;
+                $result['_RESPONSE'] = $response;
             }else {
                 $result = $result ? $result : new \stdClass();
                 $result->_ERROR = $_ERROR;
+                $result->_RESPONSE = $response;
             }
 
             return $result;

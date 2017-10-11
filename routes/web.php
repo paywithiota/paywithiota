@@ -12,6 +12,10 @@
 */
 Route::group(['middleware' => 'web'], function ($router){
 
+    Route::get('test', function (){
+
+echo        $data = (new \App\Util\Iota())->convertCurrency(1000, 'INR', 'USD');
+    });
     /**
      * Non-logged in routes
      */
