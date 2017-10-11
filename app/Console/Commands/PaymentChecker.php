@@ -76,7 +76,7 @@ class PaymentChecker extends Command
                                     'invoice_id'      => $payment->invoice_id,
                                     'status'          => $payment->status,
                                     'price_usd'       => $payment->price_usd,
-                                    'price_iota'      => $payment->price_usd,
+                                    'price_iota'      => $payment->price_iota,
                                     'ipn'             => $payment->ipn,
                                     'ipn_verify_code' => $payment->ipn_verify_code,
                                     'custom'          => $payment->metadata,
