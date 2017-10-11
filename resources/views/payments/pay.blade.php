@@ -146,7 +146,7 @@
                 var $payNowButton = $( '#payNow' );
                 var transferInputs;
                 var seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}";
-                $( '#qrcode' ).qrcode( {width: 75, height: 75, text: address} );
+                $( '#qrcode' ).qrcode( {width: 100, height: 100, text: address} );
 
 
                 const httpProviders = [
