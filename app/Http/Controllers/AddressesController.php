@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Util\Iota;
 use Illuminate\Http\Request;
 
 class AddressesController extends Controller
@@ -19,5 +21,51 @@ class AddressesController extends Controller
         $addresses = $user->addresses()->orderby('id', 'asc')->get();
 
         return view('payments.addresses', compact('addresses', 'user'));
+    }
+
+
+    /**
+     * Create new address
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function create(Request $request)
+    {
+        /**
+         * @var User $user
+         */
+        $user = auth()->user();
+
+        // Index
+        $addressIndex = $request->get('index') ? $request->get('index') : $user->addresses()->count();
+
+        // Iota Address
+        $address = (new Iota())->generateAddress($user->iota_seed, $addressIndex);
+
+        if ($address) {
+            if ($user->addresses()->whereAddress($address)->count() > 0) {
+                $addressIndex += 1;
+
+                return redirect(route("Addresses.Create", ["index" => $addressIndex]));
+            }
+        }
+
+        // Save Address
+        if ($address) {
+
+            $address = auth()->user()->addresses()->create([
+                'address' => $address
+            ]);
+
+            flash("A new address " . $address->address . " has been created successfully.", "success");
+
+            return redirect(route("Addresses"));
+        }else {
+            flash("Address was not created due to some error.", "error");
+
+            return redirect()->back();
+        }
     }
 }

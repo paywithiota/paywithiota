@@ -87,7 +87,7 @@ class PaymentsController extends Controller
         $invoiceId = $request->get('invoice_id');
 
         // Iota Address
-        $address = (new Iota())->generateAddress(auth()->user()->iota_seed, auth()->user()->payments()->count());
+        $address = (new Iota())->generateAddress(auth()->user()->iota_seed, auth()->user()->addresses()->count());
 
         // Price
         $price = $request->get('price');
@@ -153,7 +153,7 @@ class PaymentsController extends Controller
         }else {
 
             // Save Address
-            $address = auth()->user()->addresses()->create([
+            $address = auth()->user()->addresses()->firstOrCreate([
                 'address' => $address
             ]);
 

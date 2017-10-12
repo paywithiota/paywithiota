@@ -10,12 +10,13 @@
     "require": {
         "php": ">=7.0.0",
         "fideloper/proxy": "~3.3",
+        "laracasts/flash": "^3.0",
         "laravel/cashier": "~7.0",
         "laravel/framework": "5.5.*",
         "laravel/homestead": "^6.2",
         "laravel/spark": "*@dev",
         "laravel/tinker": "~1.0",
-        "pda/pheanstalk" : "~3.0"
+        "pda/pheanstalk": "~3.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

@@ -12,10 +12,6 @@
 */
 Route::group(['middleware' => 'web'], function ($router){
 
-    Route::get('test', function (){
-
-echo        $data = (new \App\Util\Iota())->convertCurrency(1000, 'INR', 'USD');
-    });
     /**
      * Non-logged in routes
      */
@@ -46,5 +42,6 @@ echo        $data = (new \App\Util\Iota())->convertCurrency(1000, 'INR', 'USD');
         })->name("Payments.Sync");
 
         Route::get('/addresses', 'AddressesController@index')->name("Addresses");
+        Route::get('/addresses/create', 'AddressesController@create')->name("Addresses.Create");
     });
 });

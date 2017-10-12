@@ -35,6 +35,8 @@
     @include('spark::nav.guest')
 @endif
 
+@include('flash::message')
+
 <!-- Main Content -->
 @yield('content')
 
@@ -47,6 +49,10 @@
 </div>
 
 @if(config('services.iota.donation_address'))
+
+    <br />
+    <br />
+    <br />
     <div class="container">
         <div class="input-group">
             <span class="input-group-addon">Donations&nbsp;<i class="fa fa-heart"></i></span>
