@@ -43,21 +43,5 @@
 @endsection
 
 @section('before-body-end')
-    <script type="text/javascript">
-        var usdPerIota = parseFloat( "{{ $pricePerIota }}" );
-        $( document ).on( "input", '#amount', function()
-        {
-            var amount = parseFloat( $( this ).val() );
-            var totalUsd = amount * usdPerIota;
-            var multiply = parseInt( $( '#unit option:selected' ).data( 'multiply' ), 10 );
-            if( totalUsd )
-            {
-                $( '#usdAmount' ).text( '$' + (totalUsd * multiply) );
-            }
-            else
-            {
-                $( '#usdAmount' ).text( '' );
-            }
-        } );
-    </script>
+
 @endsection
