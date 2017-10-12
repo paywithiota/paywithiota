@@ -163,8 +163,9 @@ class Iota
                     return $amountIota;
                 }else {
                     return [
-                        'MIOTA' => $amountMiota,
-                        'IOTA'  => $amountIota,
+                        'USD_PER_IOTA' => ($mIotaPrice[0]->price_usd / 1000000),
+                        'MIOTA'        => $amountMiota,
+                        'IOTA'         => $amountIota,
                     ];
                 }
             }

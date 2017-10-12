@@ -40,8 +40,12 @@ Route::group(['middleware' => 'web'], function ($router){
                 return redirect(route("Payments"));
             }
         })->name("Payments.Sync");
+        Route::get('/payments/deposit', 'PaymentsController@showDepositForm')->name("Payments.Deposit.ShowForm");
+        Route::get('/payments/{payment}', 'PaymentsController@show')->name("Payments.Show");
+        Route::post('/payments/deposit', 'PaymentsController@deposit')->name("Payments.Deposit");
 
         Route::get('/addresses', 'AddressesController@index')->name("Addresses");
         Route::get('/addresses/create', 'AddressesController@create')->name("Addresses.Create");
+        Route::get('/addresses/{address}', 'AddressesController@show')->name("Addresses.Show");
     });
 });

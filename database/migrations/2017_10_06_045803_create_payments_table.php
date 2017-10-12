@@ -21,8 +21,8 @@ class CreatePaymentsTable extends Migration
             $table->bigInteger('address_id');
             $table->string('invoice_id')->nullable();
             $table->text('transaction_hash')->nullable();
-            $table->double('price_usd')->nullable();
-            $table->double('price_iota')->nullable();
+            $table->string('price_usd')->nullable();
+            $table->string('price_iota')->nullable();
             $table->text('ipn')->nullable();
             $table->string('ipn_verify_code')->nullable();
 

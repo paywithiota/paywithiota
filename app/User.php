@@ -2,6 +2,9 @@
 
 namespace App;
 
+use Laravel\Spark\Spark;
+use Ramsey\Uuid\Uuid;
+
 use Laravel\Spark\User as SparkUser;
 
 class User extends SparkUser
@@ -66,4 +69,29 @@ class User extends SparkUser
         return $this->hasMany(Address::class, 'user_id');
     }
 
+
+    /**
+     * Get user token
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function token()
+    {
+        $token = $this->tokens()->select('token')->first();
+
+        if ( ! $token) {
+
+            $token = $this->tokens()->create([
+                'id'         => Uuid::uuid4(),
+                'user_id'    => $this->id,
+                'name'       => "Default",
+                'token'      => str_random(60),
+                'metadata'   => [],
+                'transient'  => false,
+                'expires_at' => null,
+            ]);
+
+        }
+
+        return $token ? $token->token : null;
+    }
 }

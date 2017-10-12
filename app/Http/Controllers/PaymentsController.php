@@ -100,6 +100,21 @@ class PaymentsController extends Controller
     }
 
     /**
+     * Show a payment
+     * @return \Illuminate\Contracts\View\Factory|View
+     */
+    public function show(Request $request, $payment)
+    {
+        $payment = auth()->user()->payments()->whereId(base64_decode($payment))->first();
+
+        if ($payment) {
+            return view('payments.show', compact('payment'));
+        }else {
+            return redirect(route("Payments"));
+        }
+    }
+
+    /**
      * Buy with IOTA
      *
      * @param Request $request
@@ -122,17 +137,89 @@ class PaymentsController extends Controller
                 ]
             ]);
 
-            // Todo address not created
+
             if ($payment && isset($payment->status) && $payment->status == 1 && $payment->data->payment_id) {
                 return redirect(route("Payments.Pay", [
                     'return_url' => $request->get('return_url'),
                     'payment_id' => $payment->data->payment_id,
                 ]));
             }else {
+                flash("Payment was not created due to some error.", "error");
+
                 return redirect(route("Home"));
             }
         }else {
             return view("payments.buy");
         }
+    }
+
+    /**
+     * Deposit Balance
+     *
+     * @param Request $request
+     */
+    public function deposit(Request $request)
+    {
+        $amount = intval($request->get('amount'));
+        $unit = $request->get('unit');
+
+        if ($amount > 0) {
+
+            $priceIota = $amount;
+
+            if ($unit == 'MIOTA') {
+                $priceIota = $amount * 1000000;
+            }else if ($unit == 'GIOTA') {
+                $priceIota = $amount * 1000000000;
+            }else if ($unit == 'PIOTA') {
+                $priceIota = $amount * 1000000000000;
+            }
+
+            $payment = (new Iota())->call([
+                'METHOD' => 'POST',
+                'URL'    => route("Api.Payments.Create", ['api_token' => auth()->user()->token()]),
+                'DATA'   => [
+                    'invoice_id'      => '',
+                    'price_usd'       => '',
+                    'price_iota'      => $priceIota,
+                    'ipn'             => '',
+                    'ipn_verify_code' => '',
+                    'metadata'        => [
+                        'type' => 'CUSTOM_DEPOSIT'
+                    ]
+                ]
+            ]);
+
+            if ($payment && isset($payment->status) && $payment->status == 1 && $payment->data->payment_id) {
+                return redirect(route("Payments.Pay", [
+                    'return_url' => route("Payments.Show", ['payment_id' => $payment->data->payment_id]),
+                    'payment_id' => $payment->data->payment_id,
+                ]));
+            }else {
+                flash("Payment creation request was not accepted due to some error.", "error");
+
+                return redirect(route("Home"));
+            }
+        }else {
+            flash("You cannot create an empty request.", "error");
+
+            return redirect(route("Payments"));
+        }
+
+    }
+
+    /**
+     * Show deposit form
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|View
+     */
+    public function showDepositForm(Request $request)
+    {
+        $pricePerIota = (new Iota())->getPrice(1, 'USD_PER_IOTA');
+        $pricePerIota = $pricePerIota['USD_PER_IOTA'];
+
+        return view("payments.deposit", compact('pricePerIota'));
     }
 }

@@ -16,45 +16,23 @@
                                 <thead>
                                 <tr>
                                     <th>Address</th>
-                                    <th>Balance</th>
                                     <th>Created</th>
                                     <th>Updated</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($addresses as $address)
-
-                                    @php
-                                        $addressBalance =  $address->getBalance();
-                                        $balance += $addressBalance;
-                                    @endphp
-
                                     <tr>
                                         <td>
-                                            <span>{{ $address->address }}</span>
-                                            <a href="https://iotasear.ch/hash/{{$address->address}}"
-                                               target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i>
-                                            </a>
+                                            <a href="{{ route("Addresses.Show", ['address' => $address->id]) }}">{{ $address->address }}</a>
                                         </td>
 
-                                        <td>{{ $addressBalance / 1000000 >= 1 ? doubleval($addressBalance / 1000000 ). ' MIOTA' : $addressBalance . ' IOTA' }}</td>
 
                                         <td title="{{$address->created_at->format('Y-m-d H:i:s')}} UTC">{{ $address->created_at->diffForHumans()  }}</td>
                                         <td title="{{$address->updated_at->format('Y-m-d H:i:s')}} UTC">{{ $address->updated_at->diffForHumans()  }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
-                                @if(request()->get('balance'))
-                                    <tfoot>
-                                    <tr>
-                                        <th scope="row">Total Balance</th>
-
-                                        <td>{{ $balance / 1000000 >= 1 ? doubleval($balance / 1000000) . ' MIOTA' : $balance . ' IOTA' }}</td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    </tfoot>
-                                @endif
                             </table>
                         </div>
                     </div>

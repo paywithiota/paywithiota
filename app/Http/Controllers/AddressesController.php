@@ -20,7 +20,7 @@ class AddressesController extends Controller
         $user = auth()->user();
         $addresses = $user->addresses()->orderby('id', 'asc')->get();
 
-        return view('payments.addresses', compact('addresses', 'user'));
+        return view('addresses.index', compact('addresses', 'user'));
     }
 
 
@@ -66,6 +66,21 @@ class AddressesController extends Controller
             flash("Address was not created due to some error.", "error");
 
             return redirect()->back();
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param         $address
+     */
+    public function show(Request $request, $address)
+    {
+        $address = auth()->user()->addresses()->whereId($address)->first();
+
+        if ($address) {
+            return view('addresses.show', compact('address'));
+        }else {
+            return redirect(route("Addresses"));
         }
     }
 }
