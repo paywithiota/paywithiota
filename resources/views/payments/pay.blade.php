@@ -187,7 +187,7 @@
 
             setTimeout( function()
             {
-                $( '#qrcode' ).qrcode( {width: 100, height: 100, text: address} );
+                $( '#qrcode' ).qrcode( {width: 200, height: 200, text: JSON.stringify( {"address": address, "amount": amount, "tag": ""} )} );
 
                 const httpProviders = [
                     "https://node.tangle.works:443"
