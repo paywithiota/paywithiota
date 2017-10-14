@@ -9,9 +9,7 @@ Payment Id: {{ base64_encode($payment->id) }}
 <br/>
 Invoice Id: {{ $payment->invoice_id }}
 <br/>
-Amount USD: {{ $payment->price_usd }}
-<br/>
-Amount IOTA: {{ (new \App\Util\Iota())->unit($payment->price_iota) }}
+Amount IOTA: {{ (new \App\Util\Iota())->unit($payment->price_iota) }}OTA
 <br/>
 Address: {{ $payment->address->address }}
 <br/>
