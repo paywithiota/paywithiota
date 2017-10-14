@@ -25,6 +25,8 @@ class Iota
         }else {
             $this->nodeUrl = 'https://iotanode.prizziota.com/';
         }
+
+        $this->nodeUrl = $this->getWorkingNode();
     }
 
     /**
@@ -297,7 +299,6 @@ class Iota
                         'METHOD'               => 'GET',
                         'SKIP_DEFAULT_HEADERS' => true,
                     ]);
-
                 }catch (\Exception $e){
 
                 }
