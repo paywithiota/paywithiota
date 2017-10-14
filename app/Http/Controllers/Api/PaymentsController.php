@@ -106,7 +106,7 @@ class PaymentsController extends Controller
         }
 
         // Current Price in iota if not passed by api
-        $priceIota = $priceIota > 0 ? $priceIota : ($priceUsd ? (new Iota())->getPrice($priceUsd, 'IOTA') : null);
+        $priceIota = $priceIota > 0 ? $priceIota : ($priceUsd ? (new Iota())->getPrice($priceUsd, 'I') : null);
 
         // IPN Url {This url is called when a payment is processed}
         $ipnUrl = $request->get('ipn');

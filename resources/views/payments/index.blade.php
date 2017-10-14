@@ -49,10 +49,10 @@
                                            target="_blank">{{ substr($payment->address->address, 0, 7) . '.....' .  substr($payment->address->address, -7, strlen($payment->address->address)) }}</a>
                                     </td>
                                     <td>{{ $payment->price_usd ? '$' . $payment->price_usd : "-" }}</td>
-                                    <td>{{ $payment->price_iota / 1000000 >= 1 ? doubleval($payment->price_iota / 1000000) . ' MIOTA' : intval($payment->price_iota) . ' IOTA' }}</td>
+                                    <td>{{ (new \App\Util\Iota())->unit($payment->price_iota) }}</td>
 
                                     @if(request()->get('balance'))
-                                        <td>{{ $addressBalance / 1000000 >= 1 ? doubleval($addressBalance / 1000000 ). ' MIOTA' : intval($addressBalance) . ' IOTA' }}</td>
+                                        <td>{{ (new \App\Util\Iota())->unit($addressBalance) }}</td>
                                     @endif
                                     <td>{{ $payment->status ? 'Done' : 'Pending' }}</td>
                                     <td title="{{$payment->created_at->format('Y-m-d H:i:s')}} UTC">{{ $payment->created_at->diffForHumans()  }}</td>
@@ -68,7 +68,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>{{ $balance / 1000000 >= 1 ? doubleval($balance / 1000000) . ' MIOTA' : intval($balance) . ' IOTA' }}</td>
+                                    <td>{{ (new \App\Util\Iota())->unit($balance) }}</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>

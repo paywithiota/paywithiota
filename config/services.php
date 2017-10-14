@@ -36,8 +36,16 @@ return [
     ],
 
     'iota' => [
-        'node_url' => env('IOTA_NODE_URL'),
-        'donation_address' => env('IOTA_DONATION_ADDRESS')
+        'node_url'         => env('IOTA_NODE_URL'),
+        'donation_address' => env('IOTA_DONATION_ADDRESS'),
+        'units'            => [
+            'I'  => 1,
+            'KI' => 1000,
+            'MI' => 1000000,
+            'GI' => 1000000000,
+            'TI' => 1000000000000,
+            'PI' => 1000000000000000,
+        ]
     ]
 
 ];

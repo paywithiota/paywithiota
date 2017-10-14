@@ -42,6 +42,7 @@ Route::group(['middleware' => 'web'], function ($router){
         })->name("Payments.Sync");
         Route::get('/payments/deposit', 'PaymentsController@showDepositForm')->name("Payments.Deposit.ShowForm");
         Route::get('/payments/transfer', 'PaymentsController@showTransferForm')->name("Payments.Transfer.ShowForm");
+        Route::post('/payments/transfer', 'PaymentsController@transfer')->name("Payments.Transfer");
         Route::get('/payments/{payment}', 'PaymentsController@show')->name("Payments.Show");
         Route::post('/payments/deposit', 'PaymentsController@deposit')->name("Payments.Deposit");
 

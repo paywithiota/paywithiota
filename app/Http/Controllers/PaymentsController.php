@@ -166,15 +166,7 @@ class PaymentsController extends Controller
 
         if ($amount > 0) {
 
-            $priceIota = $amount;
-
-            if ($unit == 'MIOTA') {
-                $priceIota = $amount * 1000000;
-            }else if ($unit == 'GIOTA') {
-                $priceIota = $amount * 1000000000;
-            }else if ($unit == 'PIOTA') {
-                $priceIota = $amount * 1000000000000;
-            }
+            $priceIota = (new Iota())->convertToUnit($amount, $unit, 'I');
 
             $payment = (new Iota())->call([
                 'METHOD' => 'POST',
@@ -240,55 +232,54 @@ class PaymentsController extends Controller
      */
     public function transfer(Request $request)
     {
-        $amount = intval($request->get('amount'));
+        $amount = floatval($request->get('amount'));
         $unit = $request->get('unit');
-        $userId = $request->get('user_id');
-        $user = $userId ? User::whereId($userId)->first() : null;
+        $userEmail = $request->get('email');
+        $user = $userEmail ? User::whereEmail($userEmail)->first() : null;
 
-        if ($amount > 0 && $user) {
+        // If amount is less than 0
+        if ($amount < 0) {
+            flash("Please enter an amount to start transfer", "error");
 
-
-            $priceIota = $amount;
-
-            if ($unit == 'MIOTA') {
-                $priceIota = $amount * 1000000;
-            }else if ($unit == 'GIOTA') {
-                $priceIota = $amount * 1000000000;
-            }else if ($unit == 'PIOTA') {
-                $priceIota = $amount * 1000000000000;
-            }
-
-            $payment = (new Iota())->call([
-                'METHOD' => 'POST',
-                'URL'    => route("Api.Payments.Create", ['api_token' => $user->token()]),
-                'DATA'   => [
-                    'invoice_id'      => '',
-                    'price_usd'       => '',
-                    'price_iota'      => $priceIota,
-                    'ipn'             => '',
-                    'ipn_verify_code' => '',
-                    'custom'          => [
-                        'type'           => 'TRANSFER',
-                        'transferred_by' => auth()->user()->email,
-                    ]
-                ]
-            ]);
-
-            if ($payment && isset($payment->status) && $payment->status == 1 && $payment->data->payment_id) {
-                return redirect(route("Payments.Pay", [
-                    'return_url' => route("Payments.Show", ['payment_id' => $payment->data->payment_id]),
-                    'payment_id' => $payment->data->payment_id,
-                ]));
-            }else {
-                flash("Transfer request was not accepted due to some error.", "error");
-
-                return redirect(route("Home"));
-            }
-        }else {
-            flash("You cannot create an empty transfer.", "error");
-
-            return redirect(route("Payments"));
+            return redirect()->back()->withInput($request->all());
         }
 
+        /**
+         * If user not found
+         */
+        if ( ! $user) {
+            flash("Please enter a valid user email address to start transfer", "error");
+
+            return redirect()->back()->withInput($request->all());
+        }
+
+        $priceIota = (new Iota())->convertToUnit($amount, $unit, 'I');
+
+        $payment = (new Iota())->call([
+            'METHOD' => 'POST',
+            'URL'    => route("Api.Payments.Create", ['api_token' => $user->token()]),
+            'DATA'   => [
+                'invoice_id'      => '',
+                'price_usd'       => '',
+                'price_iota'      => $priceIota,
+                'ipn'             => '',
+                'ipn_verify_code' => '',
+                'custom'          => [
+                    'type'           => 'TRANSFER',
+                    'transferred_by' => auth()->user()->email,
+                ]
+            ]
+        ]);
+
+        if ($payment && isset($payment->status) && $payment->status == 1 && $payment->data->payment_id) {
+            return redirect(route("Payments.Pay", [
+                'return_url' => route("Payments.Show", ['payment_id' => $payment->data->payment_id]),
+                'payment_id' => $payment->data->payment_id,
+            ]));
+        }else {
+            flash("Transfer request was not accepted due to some error.", "error");
+
+            return redirect()->back()->withInput($request->all());
+        }
     }
 }

@@ -17,10 +17,9 @@
                             <div class='form-group card required'>
                                 <label for="unit" class='control-label'>Unit: </label>
                                 <select id="unit" name="unit">
-                                    <option value="IOTA" data-multiply="1">IOTA</option>
-                                    <option value="MIOTA" data-multiply="1000000">MIOTA</option>
-                                    <option value="GIOTA" data-multiply="1000000000">GIOTA</option>
-                                    <option value="PIOTA" data-multiply="1000000000000">PIOTA</option>
+                                    @foreach(config("services.iota.units") as $unit => $value)
+                                        <option value="{{ $unit }}" data-multiply="{{ $value }}">{{ $unit }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

@@ -25,7 +25,7 @@
                     <div class="form-group text-center">
                         <div class="col-sm-4"><label for="amount">Balance:</label></div>
                         <div class="col-sm-8"
-                             style="color: #00008b; font-weight: 800;">{{ $address->getBalance() }}</div>
+                             style="color: #00008b; font-weight: 800;">{{ (new \App\Util\Iota())->unit($address->getBalance()) }}</div>
                     </div>
                 </div>
 
@@ -66,17 +66,19 @@
         var amount = '{{ $address->price_iota }}';
         var address = "{{ $address->address }}";
 
-        $(document).ready(function () {
+        $( document ).ready( function()
+        {
 
-            setTimeout(function () {
-                $('#qrcode').qrcode({
+            setTimeout( function()
+            {
+                $( '#qrcode' ).qrcode( {
                     width: 200,
                     height: 200,
-                    text: JSON.stringify({"address": address, "amount": amount, "tag": ""})
-                });
+                    text: JSON.stringify( {"address": address, "amount": amount, "tag": ""} )
+                } );
 
-            }, 2000);
-        });
+            }, 2000 );
+        } );
 
     </script>
 @endsection

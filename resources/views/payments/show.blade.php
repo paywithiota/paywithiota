@@ -36,7 +36,7 @@
                 <div class="row">
                     <div class="form-group text-center">
                         <div class="col-sm-4"><label for="amount">Amount:</label></div>
-                        <div class="col-sm-8" style="color: #00008b; font-weight: 800;">{{ $payment->price_iota }} IOTA</div>
+                        <div class="col-sm-8" style="color: #00008b; font-weight: 800;">{{ (new \App\Util\Iota())->unit($payment->price_iota) }}</div>
                     </div>
                 </div>
 
