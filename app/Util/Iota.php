@@ -360,12 +360,13 @@ class Iota
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_CUSTOMREQUEST  => strtoupper($request['METHOD']),
             CURLOPT_ENCODING       => '',
-            CURLOPT_USERAGENT      => 'PWI/PHP',
+            CURLOPT_USERAGENT      => 'PayWithIOTA',
             CURLOPT_FAILONERROR    => $request['FAILONERROR'],
             CURLOPT_VERBOSE        => $request['ALLDATA'],
             CURLOPT_HEADER         => 1,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_REFERER        => config('app.url'),
         );
 
         // Checks if DATA is being sent

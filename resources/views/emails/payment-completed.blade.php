@@ -9,17 +9,20 @@ Payment Id: {{ base64_encode($payment->id) }}
 <br/>
 Invoice Id: {{ $payment->invoice_id }}
 <br/>
-Price USD: {{ $payment->price_usd }}
+Amount USD: {{ $payment->price_usd }}
 <br/>
-Price IOTA: {{ $payment->price_iota }}
+Amount IOTA: {{ (new \App\Util\Iota())->unit($payment->price_iota) }}
 <br/>
 Address: {{ $payment->address->address }}
-
+<br/>
+<a href="https://iotasear.ch/hash/{{ $payment->address->address }}">Check it on Tangle</a>
+<br><br>
+Feeling helpful? Send love to BVGHDHVA9LHXTBMFUJIHDHSDTYFJCGUPJW9AGHKLKPHDFRTXZEUESUJUMFB9AVSEREDXVTZHNMJGWJISCZGIPSBFID
 <br><br>
 
 Thanks!
 
 <br>
 
-Team
+Team PayWithIOTA.com
 

@@ -108,36 +108,40 @@ if( currentPageName === 'PaymentsPay' )
 
             $payNowButton.html( "Retrieving Your IOTA Balance..." ).attr( 'disabled', true );
 
-            // Get inputs by seed
-            iota.api.getInputs( accountSeed, {start: startIndex, end: endIndex}, function( error, inputs )
+            setTimeout( function()
             {
-                if( error )
+
+                // Get inputs by seed
+                iota.api.getInputs( accountSeed, {start: startIndex, end: endIndex}, function( error, inputs )
                 {
-                    alert( error );
-                    $payNowButton.html( "Try Again" ).removeAttr( "disabled" );
-                    return false;
-                }
-
-                var totalBalance = inputs.totalBalance;
-
-                if( typeof totalBalance !== "undefined" && totalBalance >= amount )
-                {
-                    transferInputs = inputs;
-                    readyToPay = true;
-                    $payNowButton.removeAttr( 'disabled' );
-                    $payNowButton.html( $payNowButton.data( 'ready-text' ) );
-
-                    if( $payAutomatically === 1 )
+                    if( error )
                     {
-                        $payNowButton.click();
+                        alert( error );
+                        $payNowButton.html( "Try Again" ).removeAttr( "disabled" );
+                        return false;
                     }
-                }
-                else
-                {
-                    alert( "Your account doesn't have sufficient balance. The current balance is " + totalBalance + ". Please try with another account or method." );
-                    return false;
-                }
-            } );
+
+                    var totalBalance = inputs.totalBalance;
+
+                    if( typeof totalBalance !== "undefined" && totalBalance >= amount )
+                    {
+                        transferInputs = inputs;
+                        readyToPay = true;
+                        $payNowButton.removeAttr( 'disabled' );
+                        $payNowButton.html( $payNowButton.data( 'ready-text' ) );
+
+                        if( $payAutomatically === 1 )
+                        {
+                            $payNowButton.click();
+                        }
+                    }
+                    else
+                    {
+                        alert( "Your account doesn't have sufficient balance. The current balance is " + totalBalance + ". Please try with another account or method." );
+                        return false;
+                    }
+                } );
+            }, 1000 );
         }
     }
 
@@ -155,39 +159,43 @@ if( currentPageName === 'PaymentsPay' )
                 // Update button text
                 $payNowButton.html( $payNowButton.data( 'loading-text' ) ).attr( 'disabled', true );
 
-                // Start transfer
-                startTransfer( iota, address, amount, accountSeed, transferInputs, function( error, data )
+                setTimeout( function()
                 {
-                    if( error )
+                    // Start transfer
+                    startTransfer( iota, address, amount, accountSeed, transferInputs, function( error, data )
                     {
-                        alert( error );
-                        $payNowButton.html( $payNowButton.data( "ready-text" ) ).removeAttr( 'disabled' );
-                        return false;
-                    }
+                        if( error )
+                        {
+                            alert( error );
+                            $payNowButton.html( $payNowButton.data( "ready-text" ) ).removeAttr( 'disabled' );
+                            return false;
+                        }
 
-                    if( typeof data !== "undefined" && typeof data[0] !== "undefined" && typeof data[0]["address"] !== "undefined" )
-                    {
-                        $.ajax( {
-                            url: queryParam( routes['Payments.Update.Metadata'], "payment_id", paymentId ),
-                            data: data[0],
-                            type: "POST",
-                            dataType: "JSON",
-                            success: function()
-                            {
-                                alert( "Thank you for your payment. The payment is accepted and will be marked as complete as soon as it is verified on network." );
+                        if( typeof data !== "undefined" && typeof data[0] !== "undefined" && typeof data[0]["address"] !== "undefined" )
+                        {
+                            $.ajax( {
+                                url: queryParam( routes['Payments.Update.Metadata'], "payment_id", paymentId ),
+                                data: data[0],
+                                type: "POST",
+                                dataType: "JSON",
+                                success: function()
+                                {
+                                    alert( "Thank you for your payment. The payment is accepted and will be marked as complete as soon as it is verified on network." );
 
-                                if( returnUrl )
-                                {
-                                    window.location.href = returnUrl;
+                                    if( returnUrl )
+                                    {
+                                        window.location.href = returnUrl;
+                                    }
+                                    else
+                                    {
+                                        window.location.href = '/';
+                                    }
                                 }
-                                else
-                                {
-                                    window.location.href = '/';
-                                }
-                            }
-                        } );
-                    }
-                } )
+                            } );
+                        }
+                    } );
+                }, 1000 );
+
             }
             else
             {
@@ -233,8 +241,8 @@ if( currentPageName === 'PaymentsPay' )
             {
                 address: address,
                 value: parseInt( amount, 10 ),
-                message: iota.utils.toTrytes( "PayWithIOTA" ),
-                tag: iota.utils.toTrytes("PayWithIOTA")
+                message: "PAIDVIAPAYWITHIOTAPAYMENTGATEWAY",
+                tag: "PAYWITHIOTADOTCOM"
             }
         ];
 

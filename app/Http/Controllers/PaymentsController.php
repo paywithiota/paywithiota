@@ -215,14 +215,12 @@ class PaymentsController extends Controller
                 'METHOD' => 'POST',
                 'URL'    => route("Api.Payments.Create", ['api_token' => auth()->user()->token()]),
                 'DATA'   => [
-                    'invoice_id'      => '',
+                    'invoice_id'      => "DEPOSIT-" . time(),
                     'price_usd'       => '',
                     'price_iota'      => $priceIota,
                     'ipn'             => '',
                     'ipn_verify_code' => '',
-                    'custom'          => [
-                        'type' => 'CUSTOM_DEPOSIT'
-                    ]
+                    'custom_var_type' => 'DEPOSIT'
                 ]
             ]);
 
@@ -302,15 +300,13 @@ class PaymentsController extends Controller
             'METHOD' => 'POST',
             'URL'    => route("Api.Payments.Create", ['api_token' => $user->token()]),
             'DATA'   => [
-                'invoice_id'      => '',
-                'price_usd'       => '',
-                'price_iota'      => $priceIota,
-                'ipn'             => '',
-                'ipn_verify_code' => '',
-                'custom'          => [
-                    'type'           => 'TRANSFER',
-                    'transferred_by' => auth()->user()->email,
-                ]
+                'invoice_id'        => 'TRANSFER-' . time(),
+                'price_usd'         => '',
+                'price_iota'        => $priceIota,
+                'ipn'               => '',
+                'ipn_verify_code'   => '',
+                'custom_var_type'   => 'TRANSFER',
+                'custom_var_sender' => auth()->user()->email,
             ]
         ]);
 
