@@ -28,7 +28,7 @@ class UsersController extends Controller
      *
      * @return array
      */
-    public function findByEmail(Request $request)
+    public function searchUserEmail(Request $request)
     {
         $response = [
             'data' => []
