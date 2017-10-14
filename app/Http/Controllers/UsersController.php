@@ -40,7 +40,7 @@ class UsersController extends Controller
         if ($query) {
 
             // Find user match with search term
-            $users = User::where('email', 'LIKE', '%' . $query . '%')->where('!=', auth()->user()->id)->get();
+            $users = User::where('email', 'LIKE', '%' . $query . '%')->where('id', '!=', auth()->user()->id)->get();
 
             foreach ($users as $user) {
                 $response['data'][] = [
