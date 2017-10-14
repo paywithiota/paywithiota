@@ -14,6 +14,7 @@
 
     <!-- CSS -->
     <link href="/css/sweetalert.css" rel="stylesheet">
+    <link href="/css/jquery.ui.autocomplete.css" rel="stylesheet">
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
@@ -63,6 +64,7 @@
 @endif
 <!-- JavaScript -->
 <script src="{{ mix('js/app.js') }}"></script>
+<script src="/js/jquery-ui.min.js"></script>
 <script src="/js/sweetalert.min.js"></script>
 
 @yield('before-body-end')

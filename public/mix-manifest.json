@@ -2,5 +2,6 @@
   "/js/app.js": "/js/app.js",
   "/mix.js": "/mix.js",
   "/css/app.css": "/css/app.css",
-  "/js/iota.js": "/js/iota.js"
+  "/js/iota.js": "/js/iota.js",
+  "/js/jquery-ui.min.js": "/js/jquery-ui.min.js"
 }

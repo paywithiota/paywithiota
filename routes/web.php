@@ -48,5 +48,7 @@ Route::group(['middleware' => 'web'], function ($router){
         Route::get('/addresses', 'AddressesController@index')->name("Addresses");
         Route::get('/addresses/create', 'AddressesController@create')->name("Addresses.Create");
         Route::get('/addresses/{address}', 'AddressesController@show')->name("Addresses.Show");
+
+        Route::get('/search_user', 'AutoCompleteController@searchUserEmail')->name("Search.User");
     });
 });
