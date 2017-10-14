@@ -54,10 +54,10 @@ class PaymentCompletedListener implements ShouldQueue
         $this->notifications->create($user, [
             'icon'        => 'fa-check-circle',
             'body'        => 'Your payment with id ' . base64_encode($event->payment->id) . ' is now complete.',
-            'action_text' => 'Payments',
-            'action_url'  => route("Payments"),
+            'action_text' => 'View',
+            'action_url'  => route("Payments.Show", ['payment' => base64_encode($event->payment->id)]),
         ]);
 
-        \Log::info("Payment completed. " . print_r($event->payment->toArray(), true));
+        //  \Log::info("Payment completed. " . print_r($event->payment->toArray(), true));
     }
 }
