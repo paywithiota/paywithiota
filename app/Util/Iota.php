@@ -26,7 +26,6 @@ class Iota
             $this->nodeUrl = 'https://iotanode.prizziota.com/';
         }
 
-        $this->nodeUrl = $this->getWorkingNode();
     }
 
     /**
@@ -101,7 +100,7 @@ class Iota
     public function getBalanceByAddress($address, $unit = 'MI')
     {
         $balance = $this->call([
-            'URL'    => $this->nodeUrl,
+            'URL'    => $this->getWorkingNode(),
             "METHOD" => "POST",
             'DATA'   => [
                 "command"   => "getBalances",
