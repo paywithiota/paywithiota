@@ -13,8 +13,8 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-offset-2 col-md-4 col-xs-6">
+                <div class="row" style="margin: 10px 0;">
+                    <div class="col-md-offset-1 col-md-5 col-xs-6">
                         <em>Date: {{ \Carbon\Carbon::now()->format('d M Y') }}</em>
                     </div>
                     <div class="col-md-4 col-md-offset-2 col-xs-6">
@@ -66,7 +66,7 @@
 
 
                 <div class="row" style="margin-bottom: 30px;">
-                    <div class="col-md-offset-4 col-md-4 col-md-offset-4">
+                    <div class="col-md-5 col-md-offset-4">
 
                         <button style="{{ isset($user) && $user ? '' : 'display:none;' }}" id="payNow" type="button"
                                 data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"

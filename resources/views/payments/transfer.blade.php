@@ -40,7 +40,7 @@
                                     <div class='form-group'>
                                         <label class='control-label'></label>
 
-                                        <button class='form-control btn btn-primary' type='submit'> Transfer →</button>
+                                        <button class='form-control btn btn-success' type='submit'> Transfer →</button>
                                     </div>
                                 </div>
                             </form>
