@@ -18,13 +18,11 @@ Route::group(['middleware' => 'web'], function ($router){
     Route::get("/pay", ['uses' => "PaymentsController@pay"])->name("Payments.Pay");
     Route::post("/pay", ['uses' => "PaymentsController@pay"])->name("Payments.Pay.Post");
 
-
     /**
      * Temp routes
      */
     Route::get("/product", ['uses' => "PaymentsController@product"])->name("Product");
     Route::post("/buy", ['uses' => "PaymentsController@buy"])->name("Buy.Post");
-
 
     /**
      * Login required
@@ -45,11 +43,9 @@ Route::group(['middleware' => 'web'], function ($router){
         Route::post('/payments/transfer', 'PaymentsController@transfer')->name("Payments.Transfer");
         Route::get('/payments/{payment}', 'PaymentsController@show')->name("Payments.Show");
         Route::post('/payments/deposit', 'PaymentsController@deposit')->name("Payments.Deposit");
-
         Route::get('/addresses', 'AddressesController@index')->name("Addresses");
         Route::get('/addresses/create', 'AddressesController@create')->name("Addresses.Create");
         Route::get('/addresses/{address}', 'AddressesController@show')->name("Addresses.Show");
-
-        Route::get('/search_user', 'AutoCompleteController@searchUserEmail')->name("Search.User");
+        Route::get('/users/search', 'UsersController@searchUserEmail')->name("Users.SearchByEmail");
     });
 });

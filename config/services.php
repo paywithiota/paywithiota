@@ -45,7 +45,20 @@ return [
             'GI' => 1000000000,
             'TI' => 1000000000000,
             'PI' => 1000000000000000,
+        ],
+        'nodes'            => [
+            'https://node.tangle.works:443',
+            'http://iota.bitfinex.com:80',
+            'http://service.iotasupport.com:14265',
+            'http://eugene.iota.community:14265',
+            'http://eugene.iotasupport.com:14999',
+            'http://eugeneoldisoft.iotasupport.com:14265',
+            'http://node01.iotatoken.nl:14265',
+            'http://node02.iotatoken.nl:14265',
+            'http://node03.iotatoken.nl:15265',
+            'http://node.deviceproof.org:14265',
+            'http://mainnet.necropaz.com:14500',
+            "http://node01.iotatoken.nl:14265",
         ]
     ]
-
 ];

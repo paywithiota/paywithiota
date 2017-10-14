@@ -17,15 +17,21 @@
     <link href="/css/jquery.ui.autocomplete.css" rel="stylesheet">
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
-    <!-- Scripts -->
-@yield('scripts', '')
 
-<!-- Global Spark Object -->
+    <!-- Global Spark Object -->
     <script>
         window.Spark = <?php echo json_encode(array_merge(
             Spark::scriptVariables(), []
         )); ?>;
+
+        var routes = {};
+        var currentPageName = '{{ str_replace('.', '', request()->route()->getName()) }}';
+        var iotaNodeUrl = "{{ (new \App\Util\Iota())->getWorkingNode(false) }}";
     </script>
+
+    <!-- Scripts -->
+    @yield('scripts', '')
+
 </head>
 <body class="with-navbar">
 <div id="spark-app" v-cloak>
@@ -51,9 +57,9 @@
 
 @if(config('services.iota.donation_address'))
 
-    <br />
-    <br />
-    <br />
+    <br/>
+    <br/>
+    <br/>
     <div class="container">
         <div class="input-group">
             <span class="input-group-addon">Donations&nbsp;<i class="fa fa-heart"></i></span>
@@ -64,8 +70,6 @@
 @endif
 <!-- JavaScript -->
 <script src="{{ mix('js/app.js') }}"></script>
-<script src="/js/jquery-ui.min.js"></script>
-<script src="/js/sweetalert.min.js"></script>
 
 @yield('before-body-end')
 </body>

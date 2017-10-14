@@ -3,5 +3,7 @@
   "/mix.js": "/mix.js",
   "/css/app.css": "/css/app.css",
   "/js/iota.js": "/js/iota.js",
-  "/js/jquery-ui.min.js": "/js/jquery-ui.min.js"
+  "/js/jquery-ui.min.js": "/js/jquery-ui.min.js",
+  "/resources/assets/js/plugin/iota/iota.js": "/resources/assets/js/plugin/iota/iota.js",
+  "/../resources/assets/js/plugin/iota/iota.js": "/../resources/assets/js/plugin/iota/iota.js"
 }

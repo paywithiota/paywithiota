@@ -106,6 +106,14 @@ class PaymentsController extends Controller
      */
     public function show(Request $request, $payment)
     {
+        try{
+            \Artisan::call("iota:payments:check", [
+                "paymentId" => base64_decode($payment)
+            ]);
+
+        }catch (\Exception $e){
+        }
+
         $payment = auth()->user()->payments()->whereId(base64_decode($payment))->first();
 
         if ($payment) {

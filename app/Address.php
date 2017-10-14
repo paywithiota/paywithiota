@@ -30,7 +30,7 @@ class Address extends Model
      */
     public function getBalance()
     {
-        return (new Iota())->getBalanceByAddress($this->address, 'IOTA');
+        return (new Iota())->getBalanceByAddress($this->address, 'I');
     }
 
 

@@ -20,8 +20,8 @@
                                 <th>Payment Id</th>
                                 <th>Invoice Id</th>
                                 <th>Address</th>
-                                <th>USD Price</th>
-                                <th>IOTA Price</th>
+                                <th>Amount (USD)</th>
+                                <th>Amount (IOTA)</th>
                                 @if(request()->get('balance'))
                                     <th>Balance</th>
                                 @endif
@@ -49,7 +49,7 @@
                                            target="_blank">{{ substr($payment->address->address, 0, 7) . '.....' .  substr($payment->address->address, -7, strlen($payment->address->address)) }}</a>
                                     </td>
                                     <td>{{ $payment->price_usd ? '$' . $payment->price_usd : "-" }}</td>
-                                    <td>{{ (new \App\Util\Iota())->unit($payment->price_iota) }}</td>
+                                    <td>{{ (new \App\Util\Iota())->unit($payment->price_iota) }}OTA</td>
 
                                     @if(request()->get('balance'))
                                         <td>{{ (new \App\Util\Iota())->unit($addressBalance) }}</td>

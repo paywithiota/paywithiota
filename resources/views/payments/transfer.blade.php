@@ -16,8 +16,9 @@
                             <form method="post" action="{{ route("Payments.Transfer") }}">
                                 <div class='form-row'>
                                     <div class='form-group required'>
-                                        <label class='control-label' for="email">PayWithIOTA.com Email: </label>
-                                        <input id="email" name="email" placeholder="john@snow.com" class='form-control' required type='email'>
+                                        <label class='control-label' for="transferUserEmailAutocomplete">PayWithIOTA.com Email: </label>
+                                        <input id="transferUserEmailAutocomplete" name="email" placeholder="john@snow.com" class='form-control' required
+                                               type='email'>
                                     </div>
                                 </div>
                                 <div class='form-row'>
@@ -41,8 +42,6 @@
                                 <div class='form-row'>
                                     <div class='form-group'>
                                         <label class='control-label'></label>
-
-
                                         <button class='form-control btn btn-success' type='submit'> Create Transfer Request→</button>
                                     </div>
                                 </div>
@@ -55,28 +54,8 @@
     </div>
 @endsection
 
-@section('before-body-end')
+@section('scripts')
     <script>
-        $( document ).ready( function()
-        {
-            $( "#email" ).autocomplete( {
-                source: function( request, response )
-                {
-                    $.ajax( {
-                        url: "{{ route('Search.User') }}",
-                        dataType: "json",
-                        data: {
-                            term: request.term
-                        },
-                        success: function( data )
-                        {
-                            response( data );
-
-                        }
-                    } );
-                },
-                minLength: 3
-            } );
-        } );
+        routes['findByEmail'] = "{{ route("Users.SearchByEmail") }}";
     </script>
 @endsection

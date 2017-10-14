@@ -19,7 +19,12 @@
                 </div>
 
                 <div class="row">
-                    <div id="qrcode" class="text-center"></div>
+                    <div class="text-center qr-code-holder"
+                         data-content="{{ json_encode(["address" => $payment->address->address, 'tag' => '', 'amount' => $payment->price_iota]) }}"
+                         data-width="200"
+                         data-height="200">
+
+                    </div>
                 </div>
 
                 <div class="row text-center" style="margin:10px 5px;">
@@ -36,7 +41,7 @@
                 <div class="row">
                     <div class="form-group text-center">
                         <div class="col-sm-4"><label for="amount">Amount:</label></div>
-                        <div class="col-sm-8" style="color: #00008b; font-weight: 800;">{{ (new \App\Util\Iota())->unit($payment->price_iota) }}</div>
+                        <div class="col-sm-8" style="color: #00008b; font-weight: 800;">{{ (new \App\Util\Iota())->unit($payment->price_iota) }}OTA</div>
                     </div>
                 </div>
 
@@ -50,14 +55,24 @@
                 <div class="row">
                     <div class="form-group text-center">
                         <div class="col-sm-4"><label for="payment_status">Payment Status:</label></div>
-                        <div class="col-sm-8" style="color: #00008b; font-weight: 800;">{{ isset($payment) && $payment->status ? 'Successful' : 'Pending' }}</div>
+                        <div class="col-sm-8"
+                             style="color: #00008b; font-weight: 800;">{{  $payment->status ? 'Completed' : 'Waiting for payment' }}
+                            @if($payment->status == 0)
+                                <a href="{{route("Payments.Pay", [
+
+                    'payment_id' => base64_encode($payment->id),
+                ])}}">Visit Pay Now page</a>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
                 <div class="row" style="margin: 30px 0;">
                     <div class="form-group text-center col-md-12">
                         <div class="col-sm-5">
-                            <a href="https://iotasear.ch/hash/{{ $payment->address->address }}" class="btn btn-success btn-lg btn-block" target="_blank">View on Tangle</a>
+                            <a href="https://iotasear.ch/hash/{{ $payment->address->address }}" class="btn btn-success btn-lg btn-block" target="_blank">Check
+                                on
+                                Tangle</a>
                         </div>
 
                         <div class="col-sm-2">
@@ -78,20 +93,13 @@
     <script src="{{ asset('/js/jquery.qrcode.min.js') }}"></script>
     <script>
 
-        var amount = '{{ $payment->price_iota }}';
+        var amount = '{{ (new \App\Util\Iota())->unit($payment->price_iota) }}OTA';
         var address = "{{ $payment->address->address }}";
 
-        $(document).ready(function () {
+        $( document ).ready( function()
+        {
 
-            setTimeout(function () {
-                $('#qrcode').qrcode({
-                    width: 200,
-                    height: 200,
-                    text: JSON.stringify({"address": address, "amount": amount, "tag": ""})
-                });
-
-            }, 2000);
-        });
+        } );
 
     </script>
 @endsection

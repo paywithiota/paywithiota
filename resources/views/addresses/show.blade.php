@@ -9,12 +9,17 @@
 
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <h2>Address Details</h2>
+                        <h2>Address</h2>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div id="qrcode" class="text-center"></div>
+                    <div class="text-center qr-code-holder"
+                         data-content="{{ json_encode(["address" => $address->address, 'tag' => '']) }}"
+                         data-width="200"
+                         data-height="200">
+
+                    </div>
                 </div>
 
                 <div class="row text-center" style="margin:10px 5px;">
@@ -25,7 +30,8 @@
                     <div class="form-group text-center">
                         <div class="col-sm-4"><label for="amount">Balance:</label></div>
                         <div class="col-sm-8"
-                             style="color: #00008b; font-weight: 800;">{{ (new \App\Util\Iota())->unit($address->getBalance()) }}</div>
+                             style="color: #00008b; font-weight: 800;">{{ (new \App\Util\Iota())->unit($address->getBalance()) }}OTA
+                        </div>
                     </div>
                 </div>
 
@@ -60,25 +66,5 @@
 
 
 @section('before-body-end')
-    <script src="{{ asset('/js/jquery.qrcode.min.js') }}"></script>
-    <script>
 
-        var amount = '{{ $address->price_iota }}';
-        var address = "{{ $address->address }}";
-
-        $( document ).ready( function()
-        {
-
-            setTimeout( function()
-            {
-                $( '#qrcode' ).qrcode( {
-                    width: 200,
-                    height: 200,
-                    text: JSON.stringify( {"address": address, "amount": amount, "tag": ""} )
-                } );
-
-            }, 2000 );
-        } );
-
-    </script>
 @endsection

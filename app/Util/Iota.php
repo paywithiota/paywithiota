@@ -96,7 +96,7 @@ class Iota
      *
      * @return array|float|mixed|null|\stdClass
      */
-    public function getBalanceByAddress($address, $unit = 'MIOTA')
+    public function getBalanceByAddress($address, $unit = 'MI')
     {
         $balance = $this->call([
             'URL'    => $this->nodeUrl,
@@ -130,7 +130,6 @@ class Iota
                 }
             }
         }
-
 
         return $balance;
     }
@@ -395,5 +394,41 @@ class Iota
         }
 
         return $finalAmount;
+    }
+
+
+    /**
+     * Get working node
+     *
+     * @param bool $default
+     *
+     * @return mixed|string
+     */
+    public function getWorkingNode($check = true)
+    {
+        $nodes = config("services.iota.nodes");
+        $response = [];
+
+        if ($check) {
+            foreach ($nodes as $node) {
+
+                try{
+                    $response = $this->call([
+                        'URL'                  => $node,
+                        'METHOD'               => 'GET',
+                        'SKIP_DEFAULT_HEADERS' => true,
+                    ]);
+
+                }catch (\Exception $e){
+
+                }
+
+                if ($response) {
+                    return $node;
+                }
+            }
+        }
+
+        return $this->nodeUrl;
     }
 }
