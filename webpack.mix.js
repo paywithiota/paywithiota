@@ -13,9 +13,17 @@ var path = require( 'path' );
  */
 
 mix.less( 'resources/assets/less/app.less', 'public/css' )
-    .copy( 'node_modules/sweetalert/dist/sweetalert.min.js', '../resources/assets/js/plugin/sweetalert/sweetalert.min.js' )
     .js( 'resources/assets/js/app.js', 'public/js' )
-    .copy( 'node_modules/sweetalert/dist/sweetalert.css', 'public/css/sweetalert.css' )
+
+    /**
+     * Copy plugins
+     */
+    .copy( 'node_modules/sweetalert/dist/sweetalert.min.js', 'resources/assets/js/plugin/sweetalert/sweetalert.min.js' )
+    .copy( 'node_modules/sweetalert/dist/sweetalert.css', 'resources/assets/css/plugin/sweetalert/sweetalert.css' )
+
+    /**
+     * Combine JS
+     */
     .combine( [
         'public/js/app.js',
         'resources/assets/js/plugin/jquery-ui/jquery-ui.min.js',
@@ -26,6 +34,16 @@ mix.less( 'resources/assets/less/app.less', 'public/css' )
         'resources/assets/js/pages/payments/pay.js',
         'resources/assets/js/pages/payments/transfer.js'
     ], 'public/js/app.js' )
+
+
+    /**
+     * Combine CSS
+     */
+    .combine( [
+        'resources/assets/css/plugin/sweetalert/sweetalert.css',
+        'resources/assets/css/plugin/autocomplete/jquery.ui.autocomplete.css',
+        'public/css/app.css'
+    ], 'public/css/app.css' )
     .webpackConfig( {
         externals: [{xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'}],
 

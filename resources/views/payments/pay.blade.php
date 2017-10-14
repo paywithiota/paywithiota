@@ -74,9 +74,8 @@
                         <button style="display:none;" id="payNow" type="button"
                                 data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"
                                 class="btn btn-success btn-lg btn-block"
-                                data-ready-text='Pay Now <span class="glyphicon glyphicon-chevron-right"></span>'
-                                disabled>
-                            <i class='fa fa-circle-o-notch fa-spin'></i> Connecting to IOTA Network
+                                data-ready-text='Pay Now <span class="glyphicon glyphicon-chevron-right"></span>'>
+                            Start Transfer
                         </button>
 
                         <button id="payNowWithAddress" type="button"
@@ -87,19 +86,18 @@
                 </div>
             </div>
         </div>
-
     </div>
 @endsection
 
 
 @section('scripts')
     <script>
-
+        var paymentId = '{{ base64_encode($payment->id) }}';
         var amount = '{{ $payment->price_iota }}';
         var amountWithUnit = '{{ (new \App\Util\Iota())->unit($payment->price_iota )}}OTA';
         var address = "{{ $payment->address->address }}";
         var returnUrl = "{{ isset($returnUrl) ? $returnUrl : '' }}";
         var seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}";
-
+        routes['Payments.Update.Metadata'] = "{{route("Payments.Update.Metadata")}}";
     </script>
 @endsection

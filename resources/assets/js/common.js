@@ -3,7 +3,6 @@
  */
 $( '.qr-code-holder' ).each( function()
 {
-    console.log( $( this ) )
     var width = parseInt( $( this ).data( 'width' ), 10 );
     var height = parseInt( $( this ).data( 'height' ), 10 );
     var content = $( this ).data( 'content' );
@@ -41,3 +40,21 @@ function queryParam( uri, key, value )
     }
 }
 
+/**
+ * IOTA Lib
+ */
+var iotaLib = window.IOTA;
+var iota = null;
+
+const currentProviderProxy = new Proxy( {
+    currentProvider: null
+}, {
+    set: function( obj, prop, value )
+    {
+        obj[prop] = value;
+        iota = new iotaLib( {'provider': iotaNodeUrl} );
+        return true
+    }
+} );
+
+currentProviderProxy.currentProvider = iotaNodeUrl;

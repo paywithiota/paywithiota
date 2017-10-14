@@ -201,6 +201,117 @@ class Iota
     }
 
     /**
+     * Convert IOTA amount
+     *
+     * @param $amount
+     * @param $fromUnit
+     * @param $toUnit
+     *
+     * @return int
+     */
+    public function convertToUnit($amount, $fromUnit, $toUnit)
+    {
+        // Final amount
+        $finalAmount = $fromUnit == $toUnit ? $amount : 0;
+
+        // Get IOTA units
+        $iotaUnits = config("services.iota.units");
+
+        if ( ! $finalAmount) {
+            if (isset($iotaUnits[$fromUnit]) && isset($iotaUnits[$toUnit])) {
+
+                $convertedAmount = ($amount * $iotaUnits[$fromUnit]) / $iotaUnits[$toUnit];
+
+                $finalAmount = number_format($convertedAmount, 6, '.', '');
+
+                $finalAmount = $finalAmount > 0 ? $finalAmount : number_format($convertedAmount, 9, '.', '');
+                $finalAmount = $finalAmount > 0 ? $finalAmount : number_format($convertedAmount, 12, '.', '');
+                $finalAmount = $finalAmount > 0 ? $finalAmount : number_format($convertedAmount, 16, '.', '');
+            }
+        }
+
+        return rtrim(rtrim($finalAmount, 0), '.');
+    }
+
+
+    /**
+     * Convert value to biggest unit
+     *
+     * @param $amountIota
+     *
+     * @return array
+     */
+    public function unit($amountIota, $lowest = 0.1, $return = 'text')
+    {
+        $finalAmount = [
+            'amount' => $amountIota,
+            'unit'   => 'I'
+        ];
+
+        // Get IOTA units
+        $iotaUnits = config("services.iota.units");
+
+        uasort($iotaUnits, function ($a, $b){
+            return $a < $b;
+        });
+
+        foreach ($iotaUnits as $iotaUnit => $amountInIota) {
+            $amount = $this->convertToUnit($amountIota, 'I', $iotaUnit);
+            if ($amount >= $lowest) {
+
+                $finalAmount = [
+                    'amount' => $amount,
+                    'unit'   => $iotaUnit
+                ];
+
+                break;
+            }
+        }
+
+        if ($return == 'text') {
+            $finalAmount = $finalAmount['amount'] . ' ' . $finalAmount['unit'];
+        }
+
+        return $finalAmount;
+    }
+
+
+    /**
+     * Get working node
+     *
+     * @param bool $default
+     *
+     * @return mixed|string
+     */
+    public function getWorkingNode($check = true)
+    {
+        $nodes = config("services.iota.nodes");
+        $response = [];
+
+        if ($check) {
+            foreach ($nodes as $node) {
+
+                try{
+                    $response = $this->call([
+                        'URL'                  => $node,
+                        'METHOD'               => 'GET',
+                        'SKIP_DEFAULT_HEADERS' => true,
+                    ]);
+
+                }catch (\Exception $e){
+
+                }
+
+                if ($response) {
+                    return $node;
+                }
+            }
+        }
+
+        return $this->nodeUrl;
+    }
+
+    /**
      * Call with Curl
      *
      * @param array $userData
@@ -319,116 +430,5 @@ class Iota
         }else {
             return $result;
         }
-    }
-
-    /**
-     * Convert IOTA amount
-     *
-     * @param $amount
-     * @param $fromUnit
-     * @param $toUnit
-     *
-     * @return int
-     */
-    public function convertToUnit($amount, $fromUnit, $toUnit)
-    {
-        // Final amount
-        $finalAmount = $fromUnit == $toUnit ? $amount : 0;
-
-        // Get IOTA units
-        $iotaUnits = config("services.iota.units");
-
-        if ( ! $finalAmount) {
-            if (isset($iotaUnits[$fromUnit]) && isset($iotaUnits[$toUnit])) {
-
-                $convertedAmount = ($amount * $iotaUnits[$fromUnit]) / $iotaUnits[$toUnit];
-
-                $finalAmount = number_format($convertedAmount, 6, '.', '');
-
-                $finalAmount = $finalAmount > 0 ? $finalAmount : number_format($convertedAmount, 9, '.', '');
-                $finalAmount = $finalAmount > 0 ? $finalAmount : number_format($convertedAmount, 12, '.', '');
-                $finalAmount = $finalAmount > 0 ? $finalAmount : number_format($convertedAmount, 16, '.', '');
-            }
-        }
-
-        return rtrim(rtrim($finalAmount, 0), '.');
-    }
-
-
-    /**
-     * Convert value to biggest unit
-     *
-     * @param $amountIota
-     *
-     * @return array
-     */
-    public function unit($amountIota, $lowest = 0.1, $return = 'text')
-    {
-        $finalAmount = [
-            'amount' => $amountIota,
-            'unit'   => 'I'
-        ];
-
-        // Get IOTA units
-        $iotaUnits = config("services.iota.units");
-
-        uasort($iotaUnits, function ($a, $b){
-            return $a < $b;
-        });
-
-        foreach ($iotaUnits as $iotaUnit => $amountInIota) {
-            $amount = $this->convertToUnit($amountIota, 'I', $iotaUnit);
-            if ($amount >= $lowest) {
-
-                $finalAmount = [
-                    'amount' => $amount,
-                    'unit'   => $iotaUnit
-                ];
-
-                break;
-            }
-        }
-
-        if ($return == 'text') {
-            $finalAmount = $finalAmount['amount'] . ' ' . $finalAmount['unit'];
-        }
-
-        return $finalAmount;
-    }
-
-
-    /**
-     * Get working node
-     *
-     * @param bool $default
-     *
-     * @return mixed|string
-     */
-    public function getWorkingNode($check = true)
-    {
-        $nodes = config("services.iota.nodes");
-        $response = [];
-
-        if ($check) {
-            foreach ($nodes as $node) {
-
-                try{
-                    $response = $this->call([
-                        'URL'                  => $node,
-                        'METHOD'               => 'GET',
-                        'SKIP_DEFAULT_HEADERS' => true,
-                    ]);
-
-                }catch (\Exception $e){
-
-                }
-
-                if ($response) {
-                    return $node;
-                }
-            }
-        }
-
-        return $this->nodeUrl;
     }
 }

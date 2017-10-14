@@ -29,8 +29,7 @@ Route::group(['middleware' => 'web'], function ($router){
      */
     Route::group(['middleware' => 'auth'], function ($router){
 
-        Route::get('/', 'PaymentsController@index')->name("Payments");
-        Route::get('/home', 'PaymentsController@index')->name("Home");
+
         Route::get('/payments/sync', function (){
             if (auth()->user()) {
                 \Artisan::call("iota:payments:check", ['user' => auth()->user()->id]);
@@ -38,14 +37,19 @@ Route::group(['middleware' => 'web'], function ($router){
                 return redirect(route("Payments"));
             }
         })->name("Payments.Sync");
+        
+        Route::get('/', 'PaymentsController@index')->name("Payments");
+        Route::get('/home', 'PaymentsController@index')->name("Home");
         Route::get('/payments/deposit', 'PaymentsController@showDepositForm')->name("Payments.Deposit.ShowForm");
         Route::get('/payments/transfer', 'PaymentsController@showTransferForm')->name("Payments.Transfer.ShowForm");
         Route::post('/payments/transfer', 'PaymentsController@transfer')->name("Payments.Transfer");
+        Route::post('/payments/update', 'PaymentsController@updateMetadata')->name("Payments.Update.Metadata");
         Route::get('/payments/{payment}', 'PaymentsController@show')->name("Payments.Show");
         Route::post('/payments/deposit', 'PaymentsController@deposit')->name("Payments.Deposit");
         Route::get('/addresses', 'AddressesController@index')->name("Addresses");
         Route::get('/addresses/create', 'AddressesController@create')->name("Addresses.Create");
         Route::get('/addresses/{address}', 'AddressesController@show')->name("Addresses.Show");
         Route::get('/users/search', 'UsersController@searchUserEmail')->name("Users.SearchByEmail");
+        Route::get('/account', 'UsersController@getAccountData')->name("Users.Account");
     });
 });

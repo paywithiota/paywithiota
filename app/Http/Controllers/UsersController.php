@@ -7,6 +7,19 @@ use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(Request $request)
+    {
+        $except = [
+
+        ];
+
+        $this->middleware('auth')->except($except);
+    }
 
     /**
      * Search user by email address
@@ -22,12 +35,12 @@ class UsersController extends Controller
         ];
 
         // Get requested term
-        $query = trim($request->get('term', ''));
+        $query = trim(str_replace('%', '', $request->get('term', '')));
 
         if ($query) {
 
             // Find user match with search term
-            $users = User::where('email', 'LIKE', '%' . $query . '%')->get();
+            $users = User::where('email', 'LIKE', '%' . $query . '%')->where('!=', auth()->user()->id)->get();
 
             foreach ($users as $user) {
                 $response['data'][] = [
@@ -37,6 +50,17 @@ class UsersController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    /**
+     * Get User account data
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getAccountData()
+    {
+        $user = auth()->user();
+
+        return view("users.account", compact("user"));
     }
 
 }

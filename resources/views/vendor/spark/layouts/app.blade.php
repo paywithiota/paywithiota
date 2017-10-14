@@ -13,8 +13,6 @@
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
 
     <!-- CSS -->
-    <link href="/css/sweetalert.css" rel="stylesheet">
-    <link href="/css/jquery.ui.autocomplete.css" rel="stylesheet">
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
 
@@ -67,6 +65,8 @@
                    value="{{ config('services.iota.donation_address') }}" readonly="">
         </div>
     </div>
+    <br/>
+    <br/>
 @endif
 <!-- JavaScript -->
 <script src="{{ mix('js/app.js') }}"></script>

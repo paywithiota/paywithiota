@@ -56,6 +56,6 @@
 
 @section('scripts')
     <script>
-        routes['findByEmail'] = "{{ route("Users.SearchByEmail") }}";
+        routes['Users.SearchByEmail'] = "{{ route("Users.SearchByEmail") }}";
     </script>
 @endsection

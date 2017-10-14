@@ -20,7 +20,8 @@ class PaymentsController extends Controller
         $except = [
             'payNow',
             'buy',
-            'product'
+            'product',
+            'updateMetadata'
         ];
 
         // Login
@@ -160,6 +161,40 @@ class PaymentsController extends Controller
         }else {
             return view("payments.buy");
         }
+    }
+
+    /**
+     * Update payment metadata
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateMetadata(Request $request)
+    {
+        $response = [
+            'status' => 0
+        ];
+
+        $paymentId = $request->get("payment_id");
+
+        $payment = Payment::whereId(base64_decode($paymentId))->first();
+
+        if ($payment && $payment->status == 0) {
+            $paymentMetadata = $payment->metadata;
+
+            if ( ! isset($paymentMetadata['transaction'])) {
+                $paymentMetadata['transaction'] = $request->all();
+
+                $payment->update([
+                    'metadata' => $paymentMetadata
+                ]);
+
+                $response['status'] = 1;
+            }
+        }
+
+        return response()->json($response);
     }
 
     /**

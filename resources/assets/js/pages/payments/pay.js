@@ -66,23 +66,6 @@ if( currentPageName === 'PaymentsPay' )
     } );
 
     /**
-     * IOTA Lib
-     */
-    var iotaLib = window.IOTA;
-    var iota = null;
-
-    const currentProviderProxy = new Proxy( {
-        currentProvider: iotaNodeUrl
-    }, {
-        set: function( obj, prop, value )
-        {
-            obj[prop] = value;
-            iota = new iotaLib( {'provider': iotaNodeUrl} );
-            return true
-        }
-    } );
-
-    /**
      * Get account seed
      * @returns {boolean|string}
      */
@@ -120,8 +103,8 @@ if( currentPageName === 'PaymentsPay' )
 
         if( accountSeed )
         {
-            const startIndex = 0;
-            const endIndex = typeof iotaAddressEndIndex === "undefined" ? 49 : iotaAddressEndIndex;
+            var startIndex = 0;
+            var endIndex = typeof iotaAddressEndIndex === "undefined" ? 49 : iotaAddressEndIndex;
 
             $payNowButton.html( "Retrieving Your IOTA Balance..." ).attr( 'disabled', true );
 
@@ -137,7 +120,7 @@ if( currentPageName === 'PaymentsPay' )
 
                 var totalBalance = inputs.totalBalance;
 
-                if( typeof totalBalance !== "undefined" && totalBalance > 0 )
+                if( typeof totalBalance !== "undefined" && totalBalance >= amount )
                 {
                     transferInputs = inputs;
                     readyToPay = true;
@@ -184,16 +167,25 @@ if( currentPageName === 'PaymentsPay' )
 
                     if( typeof data !== "undefined" && typeof data[0] !== "undefined" && typeof data[0]["address"] !== "undefined" )
                     {
-                        alert( "Thank you for your payment. The payment is accepted and will be marked as complete as soon as it is verified on network." );
+                        $.ajax( {
+                            url: queryParam( routes['Payments.Update.Metadata'], "payment_id", paymentId ),
+                            data: data[0],
+                            type: "POST",
+                            dataType: "JSON",
+                            success: function()
+                            {
+                                alert( "Thank you for your payment. The payment is accepted and will be marked as complete as soon as it is verified on network." );
 
-                        if( returnUrl )
-                        {
-                            window.location.href = returnUrl;
-                        }
-                        else
-                        {
-                            window.location.href = '/';
-                        }
+                                if( returnUrl )
+                                {
+                                    window.location.href = returnUrl;
+                                }
+                                else
+                                {
+                                    window.location.href = '/';
+                                }
+                            }
+                        } );
                     }
                 } )
             }
@@ -241,8 +233,8 @@ if( currentPageName === 'PaymentsPay' )
             {
                 address: address,
                 value: parseInt( amount, 10 ),
-                message: "PaidViaPayWithIOTADotComPaymentGateway",
-                tag: "PayWithIOTADotCom"
+                message: iota.utils.toTrytes( "PayWithIOTA" ),
+                tag: iota.utils.toTrytes("PayWithIOTA")
             }
         ];
 

@@ -4,7 +4,7 @@ if( currentPageName === 'PaymentsTransferShowForm' )
         source: function( request, callback )
         {
             $.ajax( {
-                url: routes['findByEmail'],
+                url: routes['Users.SearchByEmail'],
                 dataType: "json",
                 data: {
                     term: request.term

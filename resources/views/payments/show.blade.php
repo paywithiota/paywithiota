@@ -45,6 +45,31 @@
                     </div>
                 </div>
 
+                @foreach($payment->metadata as $key => $metadata)
+
+                    @if(is_array($metadata))
+                        @foreach($metadata as $subkey => $submetadata)
+                            @if(is_array($submetadata))
+                                @php($submetadata = json_encode($submetadata))
+                            @endif
+                            <div class="row">
+                                <div class="form-group text-center">
+                                    <div class="col-sm-4"><label>{{ $subkey }}:</label></div>
+                                    <div class="col-sm-8"
+                                         style="word-wrap: break-word">{{ $submetadata }}</div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="row">
+                            <div class="form-group text-center">
+                                <div class="col-sm-4"><label>{{ $key }}:</label></div>
+                                <div class="col-sm-8"
+                                     style="color: #00008b; font-weight: 800;">{{ $metadata }}</div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
                 <div class="row">
                     <div class="form-group text-center">
                         <div class="col-sm-4"><label for="created">Created:</label></div>
