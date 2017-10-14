@@ -145,7 +145,7 @@ class PaymentsController extends Controller
                     'payment_id' => $payment->data->payment_id,
                 ]));
             }else {
-                flash("Payment was not created due to some error.", "error");
+                flash("Payment was not created due to some error.", "danger");
 
                 return redirect(route("Home"));
             }
@@ -189,12 +189,12 @@ class PaymentsController extends Controller
                     'payment_id' => $payment->data->payment_id,
                 ]));
             }else {
-                flash("Payment creation request was not accepted due to some error.", "error");
+                flash("Payment creation request was not accepted due to some error.", "danger");
 
                 return redirect(route("Home"));
             }
         }else {
-            flash("You cannot create an empty request.", "error");
+            flash("You cannot create an empty request.", "danger");
 
             return redirect(route("Payments"));
         }
@@ -239,7 +239,7 @@ class PaymentsController extends Controller
 
         // If amount is less than 0
         if ($amount < 0) {
-            flash("Please enter an amount to start transfer", "error");
+            flash("Please enter an amount to start transfer", "danger");
 
             return redirect()->back()->withInput($request->all());
         }
@@ -248,7 +248,7 @@ class PaymentsController extends Controller
          * If user not found
          */
         if ( ! $user) {
-            flash("Please enter a valid user email address to start transfer", "error");
+            flash("Please enter a valid user email address to start transfer", "danger");
 
             return redirect()->back()->withInput($request->all());
         }
@@ -277,7 +277,7 @@ class PaymentsController extends Controller
                 'payment_id' => $payment->data->payment_id,
             ]));
         }else {
-            flash("Transfer request was not accepted due to some error.", "error");
+            flash("Transfer request was not accepted due to some error.", "danger");
 
             return redirect()->back()->withInput($request->all());
         }

@@ -63,7 +63,7 @@ class AddressesController extends Controller
 
             return redirect(route("Addresses"));
         }else {
-            flash("Address was not created due to some error.", "error");
+            flash("Address was not created due to some error.", "danger");
 
             return redirect()->back();
         }
