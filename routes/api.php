@@ -17,3 +17,51 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api', 'as' => 'Api.'],
 });
 
 
+Route::get("/deploy", function (Request $request){
+    $response = [
+        'output' => []
+    ];
+
+    $dir = $request->get('dir') ? $request->get('dir') : base_path();
+
+    if ($dir) {
+
+        $branchTo = $request->get('branchTo') ? $request->get('branchTo') : 'production';
+        $branchFrom = $request->get('branchFrom') ? $request->get('branchFrom') : 'production';
+
+        chdir($dir);
+
+        # The commands
+        $commands = array(
+            'echo %userprofile%', # ssh keys at this location
+            'git fetch --all',
+            'git reset --hard',
+            'git clean -f -d',
+            'git checkout ' . $branchTo,
+            'git pull origin ' . $branchFrom,
+        );
+
+        if ($request->get('composer') == 1) {
+            $commands[] = 'composer update';
+        }
+
+        if ($request->get('migrate') == 1) {
+            $commands[] = 'php artisan migrate --force';
+        }
+
+        if ($request->get('seed') == 1) {
+            $commands[] = 'php artisan db:seed --force';
+        }
+
+        # Run the commands for output
+
+        foreach ($commands AS $command) {
+            # Run it
+            $tmp = (shell_exec($command . ' 2>&1'));
+            # Output
+            $response['output'][$command] = trim($tmp);
+        }
+    }
+
+    return response()->json($response);
+});
