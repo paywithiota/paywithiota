@@ -17,7 +17,8 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api', 'as' => 'Api.'],
 });
 
 
-Route::get("/deploy", function (\Illuminate\Http\Request $request){
+Route::match(['get', 'post'], "/deploy", function (\Illuminate\Http\Request $request){
+
     $response = [
         'output' => []
     ];
