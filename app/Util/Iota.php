@@ -231,6 +231,10 @@ class Iota
             }
         }
 
+        if (str_replace('.', '', $finalAmount) == $finalAmount) {
+            return $finalAmount;
+        }
+
         return rtrim(rtrim($finalAmount, 0), '.');
     }
 
