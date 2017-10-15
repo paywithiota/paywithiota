@@ -35,12 +35,17 @@ class UsersController extends Controller
         ];
 
         // Get requested term
-        $query = trim(str_replace('%', '', $request->get('term', '')));
+        $searchKeyword = trim(str_replace('%', '', $request->get('term', '')));
 
-        if ($query) {
+        if ($searchKeyword) {
+
+            $searchKeyword = str_replace(' ', '%', $searchKeyword);
 
             // Find user match with search term
-            $users = User::where('email', 'LIKE', '%' . $query . '%')->where('id', '!=', auth()->user()->id)->get();
+            $users = User::where('id', '!=', auth()->user()->id)->where(function ($query) use ($searchKeyword){
+                return $query->where('email', 'LIKE', '%' . $searchKeyword . '%')
+                             ->orWhere('name', 'LIKE', '%' . $searchKeyword . '%');
+            })->groupBy('id')->select(['id', 'email'])->limit(6)->get();
 
             foreach ($users as $user) {
                 $response['data'][] = [
