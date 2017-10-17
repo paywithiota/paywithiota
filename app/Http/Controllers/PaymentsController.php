@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Address;
 use App\Payment;
 use App\User;
 use App\Util\Iota;
@@ -64,7 +65,10 @@ class PaymentsController extends Controller
                     return $returnUrl ? redirect($returnUrl) : redirect(route("Home"));
                 }
 
-                return view("payments.pay", compact('payment', 'returnUrl', 'user'));
+                // Addresses
+                $totalAddresses = Address::whereUserId($payment->user_id)->count();
+
+                return view("payments.pay", compact('payment', 'returnUrl', 'user', 'totalAddresses'));
             }
         }
 
@@ -80,12 +84,17 @@ class PaymentsController extends Controller
     {
         $paymentId = $request->get('payment_id');
         $returnUrl = $request->get('return_url');
+        $user = auth()->user();
 
         if ($paymentId) {
             $payment = Payment::whereId(base64_decode($paymentId))->whereStatus(0)->first();
 
             if ($payment) {
-                return view("payments.pay", compact('payment', 'returnUrl'));
+
+                // Addresses
+                $totalAddresses = Address::whereUserId($payment->user_id)->count();
+
+                return view("payments.pay", compact('payment', 'returnUrl', 'user', 'totalAddresses'));
             }
         }
 

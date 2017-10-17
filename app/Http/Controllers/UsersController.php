@@ -63,9 +63,12 @@ class UsersController extends Controller
      */
     public function getAccountData()
     {
+        auth()->loginUsingId(2);
         $user = auth()->user();
 
-        return view("users.account", compact("user"));
+        // Addresses
+        $totalAddresses = $user->addresses()->count();
+        return view("users.account", compact("user", "totalAddresses"));
     }
 
 }

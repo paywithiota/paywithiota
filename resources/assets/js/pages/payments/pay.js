@@ -104,7 +104,8 @@ if( currentPageName === 'PaymentsPay' )
         if( accountSeed )
         {
             var startIndex = 0;
-            var endIndex = typeof iotaAddressEndIndex === "undefined" ? 49 : iotaAddressEndIndex;
+            var endIndex = typeof iotaAddressEndIndex === "undefined" ? 49 : parseInt( iotaAddressEndIndex, 10 );
+            endIndex = endIndex > 0 ? endIndex : 49;
 
             $payNowButton.html( "Retrieving Your IOTA Balance..." ).attr( 'disabled', true );
 
@@ -138,6 +139,7 @@ if( currentPageName === 'PaymentsPay' )
                     else
                     {
                         alert( "Your account doesn't have sufficient balance. The current balance is " + totalBalance + ". Please try with another account or method." );
+                        $payNowButton.html( "Try Again" ).removeAttr( "disabled" );
                         return false;
                     }
                 } );

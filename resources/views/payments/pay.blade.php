@@ -92,12 +92,13 @@
 
 @section('scripts')
     <script>
-        var paymentId = '{{ base64_encode($payment->id) }}';
-        var amount = '{{ $payment->price_iota }}';
-        var amountWithUnit = '{{ (new \App\Util\Iota())->unit($payment->price_iota )}}OTA';
-        var address = "{{ $payment->address->address }}";
-        var returnUrl = "{{ isset($returnUrl) ? $returnUrl : '' }}";
-        var seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}";
+        var paymentId = '{{ base64_encode($payment->id) }}',
+            amount = '{{ $payment->price_iota }}',
+            amountWithUnit = '{{ (new \App\Util\Iota())->unit($payment->price_iota )}}OTA',
+            address = "{{ $payment->address->address }}",
+            returnUrl = "{{ isset($returnUrl) ? $returnUrl : '' }}",
+            seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}",
+            iotaAddressEndIndex = "{{ isset($totalAddresses) ? $totalAddresses + 5 : 49 }}";
         routes['Payments.Update.Metadata'] = "{{route("Payments.Update.Metadata")}}";
     </script>
 @endsection
