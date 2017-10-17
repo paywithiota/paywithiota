@@ -6,7 +6,8 @@
             <div class="row">
                 <div class="col-md-3 text-center">
                     <div class="block">
-                        <a class="btn btn-cover" href="https://github.com/paywithiota/woocommerce-Pay-with-IOTA/blob/master/README.md" target="_blank" role="button">Documentation</a>
+                        <a class="btn btn-cover" href="https://github.com/paywithiota/woocommerce-Pay-with-IOTA/blob/master/README.md" target="_blank"
+                           role="button">Documentation</a>
                         <a class="btn btn-cover" href="https://github.com/paywithiota/woocommerce-Pay-with-IOTA" target="_blank" role="button">WooCommerce</a>
                     </div>
                 </div>
@@ -16,8 +17,14 @@
                 </div>
                 <div class="col-md-3 text-center">
                     <div class="block">
-                        <a class="btn btn-cover" href="/login" role="button">Login</a>
-                        <a class="btn btn-cover" href="/register" role="button">Register</a>
+                        @if (Auth::check())
+                            <a href="{{ route("Payments") }}" class="btn btn-cover">Payments</a>
+                            <a href="{{ route("Addresses") }}" class="btn btn-cover">Addresses</a>
+                        @else
+
+                            <a class="btn btn-cover" href="/login" role="button">Login</a>
+                            <a class="btn btn-cover" href="/register" role="button">Register</a>
+                        @endif
                     </div>
                 </div>
             </div><!-- .row close -->
@@ -46,7 +53,8 @@
                     </div>
                     <div class="feature-box">
                         <h4>Voting</h4>
-                        <p>An important part of this sector is e-Voting.The exploration into this field of use-cases has already begun by several companies and academics. </p>
+                        <p>An important part of this sector is e-Voting.The exploration into this field of use-cases has already begun by several companies and
+                            academics. </p>
                     </div>
                 </div>
                 <div class="col-md-4 text-center">
@@ -88,7 +96,9 @@
                 <div class="col-md-6">
                     <div class="content mt-10">
                         <h4 class="subheading">Zero Processing Fee</h4>
-                        <p>We're taking zero processing fee. you can  download plugin from  <a href="https://github.com/paywithiota/woocommerce-Pay-with-IOTA" target="_blank">here.</a> We're not taking any charge on transactions and support</p>
+                        <p>We're taking zero processing fee. you can download plugin from <a href="https://github.com/paywithiota/woocommerce-Pay-with-IOTA"
+                                                                                             target="_blank">here.</a> We're not taking any charge on
+                            transactions and support</p>
                     </div>
                 </div>
             </div>
@@ -110,20 +120,23 @@
                 <div class="col-md-6">
                     <div class="content mt-100">
                         <h4 class="subheading">Secure Api Access</h4>
-                        <p>Helps web merchants accept IOTA payments easy on their website. We have no fees, unlike other payment gateways. We have a simple and secure API that you can integrate into your system.</p>
+                        <p>Helps web merchants accept IOTA payments easy on their website. We have no fees, unlike other payment gateways. We have a simple and
+                            secure API that you can integrate into your system.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="call-to-action section bg-opacity bg-1">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <a href="/register" class="btn btn-main call-back-button">Create Your Account</a>
+    @if (!Auth::check())
+        <section class="call-to-action section bg-opacity bg-1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a href="/register" class="btn btn-main call-back-button">Create Your Account</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section><!-- #call-to-action close -->
+        </section><!-- #call-to-action close -->
+    @endif
 @endsection
