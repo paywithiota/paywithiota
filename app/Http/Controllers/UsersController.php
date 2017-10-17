@@ -63,7 +63,6 @@ class UsersController extends Controller
      */
     public function getAccountData()
     {
-        auth()->loginUsingId(2);
         $user = auth()->user();
 
         // Addresses
