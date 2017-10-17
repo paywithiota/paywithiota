@@ -69,7 +69,7 @@ class PaymentsController extends Controller
                 }
 
                 // Addresses
-                $totalAddresses = Address::whereUserId($payment->user_id)->count();
+                $totalAddresses = $user ? Address::whereUserId($user->id)->count() : 49;
 
                 return view("payments.pay", compact('payment', 'returnUrl', 'user', 'totalAddresses'));
             }
@@ -95,7 +95,7 @@ class PaymentsController extends Controller
             if ($payment) {
 
                 // Addresses
-                $totalAddresses = Address::whereUserId($payment->user_id)->count();
+                $totalAddresses = $user ? Address::whereUserId($user->id)->count() : 49;
 
                 return view("payments.pay", compact('payment', 'returnUrl', 'user', 'totalAddresses'));
             }
