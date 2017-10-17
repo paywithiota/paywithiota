@@ -35,7 +35,6 @@ mix.less( 'resources/assets/less/app.less', 'public/css' )
         'resources/assets/js/pages/payments/transfer.js'
     ], 'public/js/app.js' )
 
-
     /**
      * Combine CSS
      */
@@ -44,6 +43,15 @@ mix.less( 'resources/assets/less/app.less', 'public/css' )
         'resources/assets/css/plugin/autocomplete/jquery.ui.autocomplete.css',
         'public/css/app.css'
     ], 'public/css/app.css' )
+
+
+    /**
+     * Combine CSS HOME
+     */
+    .combine( [
+        'resources/assets/css/home.css'
+    ], 'public/css/home.css')
+
     .webpackConfig( {
         externals: [{xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'}],
 
