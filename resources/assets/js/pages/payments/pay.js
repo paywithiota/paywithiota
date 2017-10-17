@@ -72,17 +72,10 @@ if( currentPageName === 'PaymentsPay' )
     function getSeed()
     {
         // User account seed
-        var accountSeed = seed;
-        accountSeed = accountSeed ? accountSeed : $customSeed.val();
+        var accountSeed = $( '.pay_with_input[value="seed"]' ).is( ':checked' ) ? $customSeed.val() : seed;
 
         if( ! accountSeed )
         {
-            // Pay with SEED
-            if( ! $payNowWithSeed.is( "checked" ) )
-            {
-                $payNowWithSeed.prop( "checked", true );
-            }
-
             alert( "Please enter your account seed OR choose another method to pay." );
             $customSeed.focus();
             $payNowButton.html( $payNowButton.data( "ready-text" ) ).removeAttr( 'disabled' );
