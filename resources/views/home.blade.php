@@ -88,7 +88,7 @@
                 <div class="col-md-6">
                     <div class="content mt-10">
                         <h4 class="subheading">Zero Processing Fee</h4>
-                        <p>We'are taking zero processing fee. you can just download plugin from  <a href="https://github.com/paywithiota/woocommerce-Pay-with-IOTA" target="_blank">here.</a>.We' are not taking any charge or transactions and support</p>
+                        <p>We're taking zero processing fee. you can  download plugin from  <a href="https://github.com/paywithiota/woocommerce-Pay-with-IOTA" target="_blank">here.</a> We're not taking any charge on transactions and support</p>
                     </div>
                 </div>
             </div>
@@ -96,7 +96,7 @@
                 <div class="col-md-6">
                     <div class="content mt-100">
                         <h4 class="subheading">24 X 7 Support</h4>
-                        <p>We have free email support for integrating your system with us, at support@paywithiota.com</p>
+                        <p>We have free email support for integrating your system with us, at nivesh@centire.in</p>
                     </div>
                 </div>
                 <div class="col-md-6 mt-100 text-center">
