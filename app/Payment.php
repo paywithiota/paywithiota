@@ -12,6 +12,7 @@ class Payment extends Model
      * @var array
      */
     protected $fillable = [
+        'sender_id',
         'address_id',
         'invoice_id',
         'transaction_hash',
@@ -49,5 +50,24 @@ class Payment extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+
+    /**
+     * Payment belongs to a user
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Payment sent by a user
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'sender_id');
     }
 }

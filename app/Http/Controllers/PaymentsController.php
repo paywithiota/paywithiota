@@ -40,7 +40,10 @@ class PaymentsController extends Controller
      */
     public function index(Request $request)
     {
-        $payments = auth()->user()->payments()->orderby('id', 'desc')->get();
+
+        $payments = Payment::whereUserId(auth()->user()->id)
+                           ->orWhere('sender_id', auth()->user()->id)
+                           ->orderby('id', 'desc')->get();
 
         return view('payments.index', compact('payments'));
     }
@@ -124,7 +127,11 @@ class PaymentsController extends Controller
         }catch (\Exception $e){
         }
 
-        $payment = auth()->user()->payments()->whereId(base64_decode($payment))->first();
+
+        $payment = Payment::whereId(base64_decode($payment))->where(function ($query){
+            return $query->whereUserId(auth()->user()->id)
+                         ->orWhere('sender_id', auth()->user()->id);
+        })->first();
 
         if ($payment) {
             return view('payments.show', compact('payment'));
@@ -320,6 +327,12 @@ class PaymentsController extends Controller
         ]);
 
         if ($payment && isset($payment->status) && $payment->status == 1 && $payment->data->payment_id) {
+
+            // Add sender id
+            Payment::whereId(base64_decode($payment->data->payment_id))->update([
+                'sender_id' => auth()->user()->id
+            ]);
+
             return redirect(route("Payments.Pay", [
                 'return_url' => route("Payments.Show", ['payment_id' => $payment->data->payment_id]),
                 'payment_id' => $payment->data->payment_id,
