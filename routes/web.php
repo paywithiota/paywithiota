@@ -18,6 +18,11 @@ Route::group(['middleware' => 'web'], function ($router){
     Route::get("/pay", ['uses' => "PaymentsController@pay"])->name("Payments.Pay");
     Route::post("/pay", ['uses' => "PaymentsController@pay"])->name("Payments.Pay.Post");
 
+    Route::get("/about", ['uses' => "HomeController@about"])->name("About");
+    Route::get("/terms", ['uses' => "HomeController@terms"])->name("Terms");
+
+    Route::get('/', 'HomeController@index')->name("Home");
+
     /**
      * Temp routes
      */
@@ -38,8 +43,7 @@ Route::group(['middleware' => 'web'], function ($router){
             }
         })->name("Payments.Sync");
         
-        Route::get('/', 'PaymentsController@index')->name("Payments");
-        Route::get('/home', 'PaymentsController@index')->name("Home");
+        Route::get('/payments', 'PaymentsController@index')->name("Payments");
         Route::get('/payments/deposit', 'PaymentsController@showDepositForm')->name("Payments.Deposit.ShowForm");
         Route::get('/payments/transfer', 'PaymentsController@showTransferForm')->name("Payments.Transfer.ShowForm");
         Route::post('/payments/transfer', 'PaymentsController@transfer')->name("Payments.Transfer");
