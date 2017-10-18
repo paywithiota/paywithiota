@@ -96,7 +96,7 @@ if( currentPageName === 'PaymentsPay' )
 
         if( accountSeed )
         {
-            var startIndex = 0;
+            var startIndex = typeof iotaAddressStartIndex === "undefined" ? 0 : parseInt( iotaAddressStartIndex, 10 );
             var endIndex = typeof iotaAddressEndIndex === "undefined" ? 49 : parseInt( iotaAddressEndIndex, 10 );
             endIndex = endIndex > 0 ? endIndex : 49;
 
@@ -241,12 +241,14 @@ if( currentPageName === 'PaymentsPay' )
             }
         ];
 
+        var $nonZeroInputs = getNonZeroInputs( inputs.inputs, 1 );
+        $nonZeroInputs = $nonZeroInputs ? $nonZeroInputs : [];
         /**
          * Transfer options
          * @type {{inputs: (*)}}
          */
         const options = {
-            inputs: inputs.inputs
+            inputs: $nonZeroInputs
         };
 
         // Call api to transfer funds
@@ -259,5 +261,24 @@ if( currentPageName === 'PaymentsPay' )
 
             callback( null, data )
         } )
+    }
+
+    /**
+     * Get all indexes
+     * @param arr
+     * @param val
+     * @returns {Array}
+     */
+    function getNonZeroInputs( arr, val )
+    {
+        var indexes = [], i;
+        for( i = 0; i < arr.length; i ++ )
+        {
+            if( arr[i]['balance'] >= val )
+            {
+                indexes.push( arr[i] );
+            }
+        }
+        return indexes;
     }
 }
