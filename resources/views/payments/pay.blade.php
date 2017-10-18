@@ -98,7 +98,7 @@
             address = "{{ $payment->address->address }}",
             returnUrl = "{{ isset($returnUrl) ? $returnUrl : '' }}",
             seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}",
-            iotaAddressEndIndex = "{{ isset($totalAddresses) && $totalAddresses > 49 ? $totalAddresses + 35 : 49 }}";
+            iotaAddressEndIndex = "{{ isset($totalAddresses) && $totalAddresses > 49 ? $totalAddresses + 10 : 49 }}";
         routes['Payments.Update.Metadata'] = "{{route("Payments.Update.Metadata")}}";
     </script>
 @endsection
