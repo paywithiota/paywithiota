@@ -323,15 +323,16 @@ class PaymentsController extends Controller
                 'ipn_verify_code'   => '',
                 'custom_var_type'   => 'TRANSFER',
                 'custom_var_sender' => auth()->user()->email,
+                'sender_id'         => auth()->user()->id,
             ]
         ]);
 
         if ($payment && isset($payment->status) && $payment->status == 1 && $payment->data->payment_id) {
 
             // Add sender id
-            Payment::whereId(base64_decode($payment->data->payment_id))->update([
+           /* Payment::whereId(base64_decode($payment->data->payment_id))->update([
                 'sender_id' => auth()->user()->id
-            ]);
+            ]);*/
 
             return redirect(route("Payments.Pay", [
                 'return_url' => route("Payments.Show", ['payment_id' => $payment->data->payment_id]),

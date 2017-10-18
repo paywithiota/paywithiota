@@ -86,6 +86,9 @@ class PaymentsController extends Controller
         // Real id
         $invoiceId = $request->get('invoice_id');
 
+        // Sender id
+        $senderId = $request->get('sender_id');
+
         // Iota Address
         $address = (new Iota())->generateAddress(auth()->user()->iota_seed, auth()->user()->addresses()->count());
 
@@ -161,6 +164,7 @@ class PaymentsController extends Controller
             // Create payment
             $payment = auth()->user()->payments()->create([
                 'invoice_id'       => $invoiceId,
+                'sender_id'        => $senderId > 0 ? $senderId : auth()->user()->id,
                 'price_usd'        => $priceUsd,
                 'price_iota'       => $priceIota,
                 'ipn'              => $ipnUrl,
