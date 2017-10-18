@@ -141,6 +141,75 @@ if( currentPageName === 'PaymentsPay' )
     }
 
     /**
+     * Get new address
+     * @param iota
+     * @param seed
+     * @param inputs
+     * @param callback
+     */
+    function getNewAddress( iota, seed, inputs, callback )
+    {
+        var $maxIndex = 0;
+
+        // Get max index
+        if( inputs && inputs.length )
+        {
+            $maxIndex = Math.max.apply( Math, inputs.map( function( i )
+            {
+                return i["keyIndex"];
+            } ) );
+        }
+
+        var $nextKeyIndex = $maxIndex + 1;
+
+        // Specify option for faster generating new address
+        var options = {
+            'index': $nextKeyIndex,
+            'checksum': false,
+            'total': 1,
+            'security': 2,
+            'returnAll': false
+        };
+
+        // Generate new address by options
+        iota.api.getNewAddress( seed, options, function( error, senderAddress )
+        {
+            if( error )
+            {
+                callback( error );
+                return false;
+            }
+
+            callback( null, senderAddress[0] );
+        } );
+    }
+
+    /**
+     * Prepare Transfer
+     * @param iota
+     * @param seed
+     * @param transferData
+     * @param options
+     * @param callback
+     */
+    function prepareTransfer( iota, seed, transferData, options, callback )
+    {
+        // Prepare trytes data
+        iota.api.prepareTransfers( seed, transferData, options, function( error, success )
+        {
+            if( error )
+            {
+                callback( error );
+                return false;
+            }
+            else
+            {
+                callback( null, success );
+            }
+        } );
+    }
+
+    /**
      * On Pay now button click
      */
     $( document ).on( "click", '#payNow', function()
@@ -156,8 +225,8 @@ if( currentPageName === 'PaymentsPay' )
 
                 setTimeout( function()
                 {
-                    // Start transfer
-                    startTransfer( iota, address, amount, accountSeed, transferInputs, function( error, data )
+                    // Get new address for transfer
+                    getNewAddress( iota, accountSeed, transferInputs.inputs, function( error, senderAddress )
                     {
                         if( error )
                         {
@@ -166,29 +235,74 @@ if( currentPageName === 'PaymentsPay' )
                             return false;
                         }
 
-                        if( typeof data !== "undefined" && typeof data[0] !== "undefined" && typeof data[0]["address"] !== "undefined" )
-                        {
-                            $.ajax( {
-                                url: queryParam( routes['Payments.Update.Metadata'], "payment_id", paymentId ),
-                                data: data[0],
-                                type: "POST",
-                                dataType: "JSON",
-                                success: function()
-                                {
-                                    alert( "Thank you for your payment. The payment is accepted and will be marked as complete as soon as it is verified on network." );
+                        console.log( senderAddress );
 
-                                    if( returnUrl )
-                                    {
-                                        window.location.href = returnUrl;
-                                    }
-                                    else
-                                    {
-                                        window.location.href = '/';
-                                    }
+                        var $transferData = [
+                            {
+                                address: address,
+                                value: parseInt( amount, 10 ),
+                                message: "PAIDVIAPAYWITHIOTAPAYMENTGATEWAY",
+                                tag: "PAYWITHIOTADOTCOM"
+                            }
+                        ];
+
+                        var $options = {
+                            'inputs': transferInputs.inputs,
+                            'address': senderAddress,
+                            'security': 2
+                        };
+
+                        console.log( $transferData );
+                        console.log( $options );
+
+                        /**
+                         * Prepare transfer
+                         */
+                        prepareTransfer( iota, accountSeed, $transferData, $options, function( error, data )
+                        {
+                            if( error )
+                            {
+                                alert( error );
+                                $payNowButton.html( $payNowButton.data( "ready-text" ) ).removeAttr( 'disabled' );
+                                return false;
+                            }
+
+                            // Start transfer
+                            startTransfer( iota, accountSeed, $transferData, $options, function( error, data )
+                            {
+                                if( error )
+                                {
+                                    alert( error );
+                                    $payNowButton.html( $payNowButton.data( "ready-text" ) ).removeAttr( 'disabled' );
+                                    return false;
+                                }
+
+                                if( typeof data !== "undefined" && typeof data[0] !== "undefined" && typeof data[0]["address"] !== "undefined" )
+                                {
+                                    $.ajax( {
+                                        url: queryParam( routes['Payments.Update.Metadata'], "payment_id", paymentId ),
+                                        data: data[0],
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        success: function()
+                                        {
+                                            alert( "Thank you for your payment. The payment is accepted and will be marked as complete as soon as it is verified on network." );
+
+                                            if( returnUrl )
+                                            {
+                                                window.location.href = returnUrl;
+                                            }
+                                            else
+                                            {
+                                                window.location.href = '/';
+                                            }
+                                        }
+                                    } );
                                 }
                             } );
-                        }
+                        } );
                     } );
+
                 }, 1000 );
 
             }
@@ -201,19 +315,18 @@ if( currentPageName === 'PaymentsPay' )
     } );
 
     /**
-     * Initiate transfer
+     * Send transfer
      * @param iota
-     * @param address
-     * @param amount
      * @param seed
-     * @param inputs
+     * @param transferData
+     * @param $options
      * @param callback
      */
-    function startTransfer( iota, address, amount, seed, inputs, callback )
+    function startTransfer( iota, seed, transferData, $options, callback )
     {
         /**
          * Options
-         * @type {{json: boolean, depth: number, mwm: number, force: boolean}}
+         *
          */
         var opts = {
             json: false,
@@ -222,37 +335,8 @@ if( currentPageName === 'PaymentsPay' )
             force: false
         };
 
-        // Check for valid address
-        if( address.length === 81 )
-        {
-            address = iota.utils.addChecksum( address )
-        }
-
-        /**
-         * Create Transfer object
-         * @type {[*]}
-         */
-        const transfers = [
-            {
-                address: address,
-                value: parseInt( amount, 10 ),
-                message: "PAIDVIAPAYWITHIOTAPAYMENTGATEWAY",
-                tag: "PAYWITHIOTADOTCOM"
-            }
-        ];
-
-        var $nonZeroInputs = getNonZeroInputs( inputs.inputs, 1 );
-        $nonZeroInputs = $nonZeroInputs ? $nonZeroInputs : [];
-        /**
-         * Transfer options
-         * @type {{inputs: (*)}}
-         */
-        const options = {
-            inputs: $nonZeroInputs
-        };
-
         // Call api to transfer funds
-        iota.api.sendTransfer( seed, opts.depth, opts.mwm, transfers, options, function( error, data )
+        iota.api.sendTransfer( seed, opts.depth, opts.mwm, transferData, $options, function( error, data )
         {
             if( error )
             {
@@ -260,25 +344,6 @@ if( currentPageName === 'PaymentsPay' )
             }
 
             callback( null, data )
-        } )
-    }
-
-    /**
-     * Get all indexes
-     * @param arr
-     * @param val
-     * @returns {Array}
-     */
-    function getNonZeroInputs( arr, val )
-    {
-        var indexes = [], i;
-        for( i = 0; i < arr.length; i ++ )
-        {
-            if( arr[i]['balance'] >= val )
-            {
-                indexes.push( arr[i] );
-            }
-        }
-        return indexes;
+        } );
     }
 }

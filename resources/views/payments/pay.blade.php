@@ -102,3 +102,12 @@
         routes['Payments.Update.Metadata'] = "{{route("Payments.Update.Metadata")}}";
     </script>
 @endsection
+
+@section('before-body-end')
+
+    <script>
+
+
+    </script>
+
+@endsection
