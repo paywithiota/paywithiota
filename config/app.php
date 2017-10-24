@@ -180,6 +180,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /**
+         * Google 2FA
+         */
+        Eusebiu\LaravelSparkGoogle2FA\Google2FAServiceProvider::class
+
     ],
 
     /*

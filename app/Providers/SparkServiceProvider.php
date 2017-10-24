@@ -13,7 +13,8 @@ class SparkServiceProvider extends ServiceProvider
      * @var array
      */
     protected $details = [
-        'vendor' => 'Nivesh Saharan',
+        '2fa_name' => "Pay with IOTA",
+        'vendor' => 'Pay with IOTA',
         'product' => 'Pay with IOTA',
         'street' => 'India',
         'location' => 'India',
@@ -50,7 +51,9 @@ class SparkServiceProvider extends ServiceProvider
      */
     public function booted()
     {
-      //  Spark::useStripe()->noCardUpFront()->trialDays(10);
+        Spark::useTwoFactorAuth();
+
+        //  Spark::useStripe()->noCardUpFront()->trialDays(10);
 
         Spark::freePlan()
             ->features([
