@@ -12,6 +12,7 @@
     "child_process": "^1.0.2",
     "cross-env": "^3.2.3",
     "fs": "0.0.1-security",
+    "iota.lib.js": "^0.4.2",
     "jquery": "^2.1.4",
     "js-cookie": "^2.1.0",
     "laravel-mix": "0.*",
