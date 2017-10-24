@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\PaymentCreated;
+use App\Payment;
+use App\User;
 use App\Util\Iota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -83,14 +85,16 @@ class PaymentsController extends Controller
             'errors' => []
         ];
 
+        /**
+         * @var User $user
+         */
+        $user = auth()->user();
+
         // Real id
         $invoiceId = $request->get('invoice_id');
 
         // Sender id
         $senderId = $request->get('sender_id');
-
-        // Iota Address
-        $address = (new Iota())->generateAddress(auth()->user()->iota_seed, auth()->user()->addresses()->count());
 
         // Price
         $price = $request->get('price');
@@ -134,16 +138,13 @@ class PaymentsController extends Controller
 
         // Validation Rules
         $rules = array(
-            'address'    => 'required',
             'price_iota' => 'required',
         );
 
         // Create a new validator instance.
         $validator = Validator::make([
-            'address'    => $address,
             'price_iota' => $priceIota
         ], $rules, [
-            'address.required'    => 'IOTA address could not be generated. Please try again later.',
             'price_iota.required' => "Price is required and cannot be empty."
         ]);
 
@@ -155,48 +156,54 @@ class PaymentsController extends Controller
 
         }else {
 
-            // Save Address
-            $address = auth()->user()->addresses()->firstOrCreate([
-                'address' => $address
-            ]);
+            // Iota Address
+            $address = $user->createNewAddress();
+
+            if ($address) {
+
+                // Create payment
+                /**
+                 * @var Payment $payment
+                 */
+                $payment = $user->payments()->create([
+                    'invoice_id'       => $invoiceId,
+                    'sender_id'        => $senderId > 0 ? $senderId : auth()->user()->id,
+                    'price_usd'        => $priceUsd,
+                    'price_iota'       => $priceIota,
+                    'ipn'              => $ipnUrl,
+                    'ipn_verify_code'  => $ipnVerifyCode ? $ipnVerifyCode : '',
+                    'address_id'       => $address->id,
+                    'transaction_hash' => '',
+                    'metadata'         => $customVariables ? $customVariables : [],
+                    'status'           => 0
+                ]);
 
 
-            // Create payment
-            $payment = auth()->user()->payments()->create([
-                'invoice_id'       => $invoiceId,
-                'sender_id'        => $senderId > 0 ? $senderId : auth()->user()->id,
-                'price_usd'        => $priceUsd,
-                'price_iota'       => $priceIota,
-                'ipn'              => $ipnUrl,
-                'ipn_verify_code'  => $ipnVerifyCode ? $ipnVerifyCode : '',
-                'address_id'       => $address->id,
-                'transaction_hash' => '',
-                'metadata'         => $customVariables ? $customVariables : [],
-                'status'           => 0
-            ]);
+                if ($payment) {
 
+                    $metadata = $payment->metadata;
 
-            if ($payment) {
+                    // Set response data
+                    $response['data'] = [
+                        'payment_id' => base64_encode($payment->id),
+                        'invoice_id' => $payment->invoice_id,
+                        'price_usd'  => $payment->price_usd,
+                        'price_iota' => $payment->price_iota,
+                        'ipn'        => $payment->ipn,
+                        'address'    => $address->address,
+                        'custom'     => $metadata,
+                        'status'     => $payment->status,
+                        'created_at' => $payment->created_at,
+                        'updated_at' => $payment->updated_at
+                    ];
 
-                $metadata = $payment->metadata;
-                // Set response data
-                $response['data'] = [
-                    'payment_id' => base64_encode($payment->id),
-                    'invoice_id' => $payment->invoice_id,
-                    'price_usd'  => $payment->price_usd,
-                    'price_iota' => $payment->price_iota,
-                    'ipn'        => $payment->ipn,
-                    'address'    => $address->address,
-                    'custom'     => $payment->metadata,
-                    'status'     => $payment->status,
-                    'created_at' => $payment->created_at,
-                    'updated_at' => $payment->updated_at
-                ];
+                    $response['status'] = 1;
 
-                $response['status'] = 1;
-
-                // [Event]
-                event(new PaymentCreated($payment, []));
+                    // [Event]
+                    event(new PaymentCreated($payment, []));
+                }
+            }else {
+                $response['errors'][] = "New address could not be generated. Please try again.";
             }
         }
 

@@ -77,13 +77,31 @@ class Iota
     /**
      * Generate New Address
      *
-     * @param $seed
+     * @param $user
+     * @param $newKeyIndex
      *
      * @return string
      */
-    public function generateAddress($seed, $count)
+    public function generateAddress($user, $newKeyIndex = 0)
     {
-        $address = trim(shell_exec("python " . public_path('files') . "/iota_address_generator.py " . $seed . " " . $count));
+        $address = '';
+
+        $script = view('scripts.iota.generate_new_address', compact('user', 'newKeyIndex'));
+
+        // Save script on local folder
+        $targetDir = storage_path('scripts/iota');
+        $filePath = $targetDir . '/' . $user->id . '-' . $newKeyIndex . '.js';
+        if (\File::exists($filePath)) {
+            \File::put($filePath, $script);
+        }else {
+            \File::makeDirectory($targetDir, 0755, true, true);
+            \File::put($filePath, $script);
+        }
+
+        if (\File::exists($filePath)) {
+            $address = trim(shell_exec("node " . $targetDir . '/' . $user->id . '-' . $newKeyIndex . '.js'));
+            unlink($filePath);
+        }
 
         return $address;
     }
@@ -288,7 +306,7 @@ class Iota
      *
      * @return mixed|string
      */
-    public function getWorkingNode($check = true)
+    public function getWorkingNode($check = false)
     {
         $nodes = config("services.iota.nodes");
         $response = [];
@@ -298,9 +316,12 @@ class Iota
 
                 try{
                     $response = $this->call([
-                        'URL'                  => $node,
-                        'METHOD'               => 'GET',
-                        'SKIP_DEFAULT_HEADERS' => true,
+                        'URL'     => $node,
+                        'METHOD'  => 'GET',
+                        'HEADERS' => [
+                            'X-IOTA-API-Version: 0.4.2'
+                        ],
+                        // 'SKIP_DEFAULT_HEADERS' => true,
                     ]);
                 }catch (\Exception $e){
 
@@ -349,6 +370,7 @@ class Iota
         }else {
             $defaultHeaders[] = 'Content-Type: application/json; charset=' . $request['CHARSET'];
             $defaultHeaders[] = 'Accept: application/json';
+            $defaultHeaders[] = 'X-IOTA-API-Version: 0.4.2';
         }
 
 

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Util\Iota;
 use Laravel\Spark\Spark;
 use Ramsey\Uuid\Uuid;
 
@@ -17,6 +18,7 @@ class User extends SparkUser
     protected $fillable = [
         'name',
         'email',
+        'last_key_index',
     ];
 
     /**
@@ -93,5 +95,32 @@ class User extends SparkUser
         }
 
         return $token ? $token->token : null;
+    }
+
+    /**
+     * Create new address
+     * @return \Illuminate\Database\Eloquent\Model|null|string
+     */
+    public function createNewAddress()
+    {
+        $lastKeyIndex = $this->last_key_index;
+        $newKeyIndex = intval(is_null($lastKeyIndex) ? 0 : $lastKeyIndex + 1);
+        $address = (new Iota())->generateAddress($this, $newKeyIndex);
+
+        if ($address) {
+            $address = $this->addresses()->firstOrCreate([
+                'address'   => $address,
+                'key_index' => $newKeyIndex,
+            ]);
+
+            // Update index
+            $this->update([
+                'last_key_index' => $newKeyIndex
+            ]);
+
+            return $address;
+        }
+
+        return null;
     }
 }
