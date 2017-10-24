@@ -13,8 +13,8 @@ class SparkServiceProvider extends ServiceProvider
      * @var array
      */
     protected $details = [
-        '2fa_name' => "Pay with IOTA",
-        'vendor' => 'Pay with IOTA',
+        '2fa_name' => "PayWithIOTA.com",
+        'vendor' => 'PayWithIOTA.com',
         'product' => 'Pay with IOTA',
         'street' => 'India',
         'location' => 'India',
