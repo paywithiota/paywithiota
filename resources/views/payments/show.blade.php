@@ -95,7 +95,7 @@
                 <div class="row" style="margin: 30px 0;">
                     <div class="form-group text-center col-md-12">
                         <div class="col-sm-5">
-                            <a href="https://iotasear.ch/hash/{{ $payment->address->address }}" class="btn btn-success btn-lg btn-block" target="_blank">Check
+                            <a href="https://thetangle.org/address/{{ $payment->address->address }}" class="btn btn-success btn-lg btn-block" target="_blank">Check
                                 on
                                 Tangle</a>
                         </div>

@@ -46,7 +46,7 @@
                 <div class="row" style="margin: 30px 0;">
                     <div class="form-group text-center col-md-12">
                         <div class="col-sm-5">
-                            <a href="https://iotasear.ch/hash/{{ $address->address }}"
+                            <a href="https://thetangle.org/address/{{ $address->address }}"
                                class="btn btn-success btn-lg btn-block" target="_blank">View on Tangle</a>
                         </div>
 

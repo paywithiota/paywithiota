@@ -13,7 +13,7 @@ Amount IOTA: {{ (new \App\Util\Iota())->unit($payment->price_iota) }}OTA
 <br/>
 Address: {{ $payment->address->address }}
 <br/>
-<a href="https://iotasear.ch/hash/{{ $payment->address->address }}">Check it on Tangle</a>
+<a href="https://thetangle.org/address/{{ $payment->address->address }}">Check it on Tangle</a>
 <br><br>
 Feeling helpful? Send love to BVGHDHVA9LHXTBMFUJIHDHSDTYFJCGUPJW9AGHKLKPHDFRTXZEUESUJUMFB9AVSEREDXVTZHNMJGWJISCZGIPSBFID
 <br><br>
