@@ -24,7 +24,7 @@
 
 @section('before-body-end')
     <script>
-        var iotaAddressEndIndex = "{{ isset($totalAddresses) ? $totalAddresses + 35 : 49 }}";
+        var iotaAddressEndIndex = "{{ isset($user) ? $user->last_key_index : 49 }}";
 
         $( document ).ready( function()
         {

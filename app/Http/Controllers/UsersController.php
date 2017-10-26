@@ -15,7 +15,7 @@ class UsersController extends Controller
     public function __construct(Request $request)
     {
         $except = [
-
+            'updateLastKeyIndex'
         ];
 
         $this->middleware('auth')->except($except);
@@ -65,9 +65,71 @@ class UsersController extends Controller
     {
         $user = auth()->user();
 
-        // Addresses
-        $totalAddresses = $user->addresses()->count();
-        return view("users.account", compact("user", "totalAddresses"));
+        return view("users.account", compact("user"));
+    }
+
+    /**
+     * Update last key index
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateLastKeyIndex(Request $request)
+    {
+        $response = [
+            'status' => 0
+        ];
+
+        $seed = $request->get("seed");
+        $address = $request->get("address");
+        $lastKeyIndex = $request->get("key_index");
+
+        if ($seed && $address) {
+            $user = User::whereIotaSeed($seed)->first();
+
+            if ($user) {
+                $user->update([
+                    "last_key_index" => $lastKeyIndex
+                ]);
+
+                $user->addresses()->firstOrCreate([
+                    'address'   => $address,
+                    'key_index' => $lastKeyIndex,
+                ]);
+
+                $response['status'] = 1;
+            }
+        }
+
+        return response()->json($response);
+
+    }
+
+    /**
+     * Get user last key index
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLastKeyIndex(Request $request)
+    {
+        $response = [
+            'status' => 0
+        ];
+
+        $seed = $request->get("seed");
+
+        if ($seed) {
+            $user = User::whereIotaSeed($seed)->select('last_key_index')->first();
+
+            if ($user) {
+                $response['status'] = 1;
+                $response['key_index'] = $user->last_key_index;
+            }
+        }
+
+        return response()->json($response);
     }
 
 }

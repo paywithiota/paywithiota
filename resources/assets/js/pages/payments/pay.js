@@ -86,6 +86,47 @@ if( currentPageName === 'PaymentsPay' )
     }
 
     /**
+     * Get End Index
+     * @param accountSeed
+     * @param callback
+     * @param defaultIndex
+     */
+    function getEndIndex( accountSeed, callback, defaultIndex )
+    {
+        if( accountSeed === seed )
+        {
+            var endIndex = typeof iotaAddressEndIndex === "undefined" ? 49 : parseInt( iotaAddressEndIndex, 10 );
+            callback( null, endIndex )
+        }
+        else
+        {
+            defaultIndex = typeof defaultIndex === "undefined" ? 49 : defaultIndex;
+
+            $.ajax( {
+                url: routes['Users.Get.LastKeyIndex'],
+                data: {
+                    seed: accountSeed
+                },
+                type: "GET",
+                dataType: "JSON",
+                success: function( response )
+                {
+                    response = $.parseJSON( JSON.stringify( response ) );
+
+                    if( response.status === 1 )
+                    {
+                        callback( null, response.key_index );
+                    }
+                    else
+                    {
+                        callback( null, defaultIndex );
+                    }
+                }
+            } );
+        }
+    }
+
+    /**
      * Get balance
      * @param $payAutomatically
      */
@@ -97,44 +138,46 @@ if( currentPageName === 'PaymentsPay' )
         if( accountSeed )
         {
             var startIndex = typeof iotaAddressStartIndex === "undefined" ? 0 : parseInt( iotaAddressStartIndex, 10 );
-            var endIndex = typeof iotaAddressEndIndex === "undefined" ? 49 : parseInt( iotaAddressEndIndex, 10 );
-            endIndex = endIndex > 0 ? endIndex : 49;
 
             $payNowButton.html( "Retrieving Your IOTA Balance..." ).attr( 'disabled', true );
 
             setTimeout( function()
             {
-
-                // Get inputs by seed
-                iota.api.getInputs( accountSeed, {start: startIndex, end: endIndex}, function( error, inputs )
+                getEndIndex( accountSeed, function( error, endIndex )
                 {
-                    if( error )
+                    endIndex = parseInt( endIndex, 10 );
+
+                    // Get inputs by seed
+                    iota.api.getInputs( accountSeed, {start: startIndex, end: endIndex}, function( error, inputs )
                     {
-                        alert( error );
-                        $payNowButton.html( "Try Again" ).removeAttr( "disabled" );
-                        return false;
-                    }
-
-                    var totalBalance = inputs.totalBalance;
-
-                    if( typeof totalBalance !== "undefined" && totalBalance >= amount )
-                    {
-                        transferInputs = inputs;
-                        readyToPay = true;
-                        $payNowButton.removeAttr( 'disabled' );
-                        $payNowButton.html( $payNowButton.data( 'ready-text' ) );
-
-                        if( $payAutomatically === 1 )
+                        if( error )
                         {
-                            $payNowButton.click();
+                            alert( error );
+                            $payNowButton.html( "Try Again" ).removeAttr( "disabled" );
+                            return false;
                         }
-                    }
-                    else
-                    {
-                        alert( "Your account doesn't have sufficient balance. The current balance is " + totalBalance + ". Please try with another account or method." );
-                        $payNowButton.html( "Try Again" ).removeAttr( "disabled" );
-                        return false;
-                    }
+
+                        var totalBalance = inputs.totalBalance;
+
+                        if( typeof totalBalance !== "undefined" && totalBalance >= amount )
+                        {
+                            transferInputs = inputs;
+                            readyToPay = true;
+                            $payNowButton.removeAttr( 'disabled' );
+                            $payNowButton.html( $payNowButton.data( 'ready-text' ) );
+
+                            if( $payAutomatically === 1 )
+                            {
+                                $payNowButton.click();
+                            }
+                        }
+                        else
+                        {
+                            alert( "Your account doesn't have sufficient balance. The current balance is " + totalBalance + ". Please try with another account or method." );
+                            $payNowButton.html( "Try Again" ).removeAttr( "disabled" );
+                            return false;
+                        }
+                    } );
                 } );
             }, 1000 );
         }
@@ -143,11 +186,11 @@ if( currentPageName === 'PaymentsPay' )
     /**
      * Get new address
      * @param iota
-     * @param seed
+     * @param accountSeed
      * @param inputs
      * @param callback
      */
-    function getNewAddress( iota, seed, inputs, callback )
+    function getNewAddress( iota, accountSeed, inputs, callback )
     {
         var $maxIndex = 0;
 
@@ -172,7 +215,7 @@ if( currentPageName === 'PaymentsPay' )
         };
 
         // Generate new address by options
-        iota.api.getNewAddress( seed, options, function( error, senderAddress )
+        iota.api.getNewAddress( accountSeed, options, function( error, senderAddress )
         {
             if( error )
             {
@@ -180,7 +223,21 @@ if( currentPageName === 'PaymentsPay' )
                 return false;
             }
 
-            callback( null, senderAddress[0] );
+            $.ajax( {
+                url: routes['Users.Update.LastKeyIndex'],
+                data: {
+                    seed: accountSeed,
+                    address: senderAddress[0],
+                    key_index: $nextKeyIndex,
+                },
+                type: "POST",
+                dataType: "JSON",
+                success: function()
+                {
+                    callback( null, senderAddress[0] );
+                }
+            } );
+
         } );
     }
 
@@ -235,8 +292,6 @@ if( currentPageName === 'PaymentsPay' )
                             return false;
                         }
 
-                        console.log( senderAddress );
-
                         var $transferData = [
                             {
                                 address: address,
@@ -251,9 +306,6 @@ if( currentPageName === 'PaymentsPay' )
                             'address': senderAddress,
                             'security': 2
                         };
-
-                        console.log( $transferData );
-                        console.log( $options );
 
                         /**
                          * Prepare transfer

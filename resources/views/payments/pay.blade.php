@@ -98,8 +98,10 @@
             address = "{{ $payment->address->address }}",
             returnUrl = "{{ isset($returnUrl) ? $returnUrl : '' }}",
             seed = "{{ isset($user) && $user ? $user->iota_seed : '' }}",
-            iotaAddressEndIndex = "{{ isset($user) && $user ? intval($user->last_key_index) + 49 : 49 }}";
+            iotaAddressEndIndex = "{{ isset($user) && $user ? intval($user->last_key_index) : 49 }}";
         routes['Payments.Update.Metadata'] = "{{route("Payments.Update.Metadata")}}";
+        routes['Users.Update.LastKeyIndex'] = "{{route("Users.Update.LastKeyIndex")}}";
+        routes['Users.Get.LastKeyIndex'] = "{{route("Users.Get.LastKeyIndex")}}";
     </script>
 @endsection
 

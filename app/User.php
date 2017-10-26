@@ -101,10 +101,13 @@ class User extends SparkUser
      * Create new address
      * @return \Illuminate\Database\Eloquent\Model|null|string
      */
-    public function createNewAddress()
+    public function createNewAddress($newKeyIndex = null)
     {
-        $lastKeyIndex = $this->last_key_index;
-        $newKeyIndex = intval(is_null($lastKeyIndex) ? 0 : $lastKeyIndex + 1);
+        if (is_null($newKeyIndex)) {
+            $lastKeyIndex = $this->last_key_index;
+            $newKeyIndex = intval(is_null($lastKeyIndex) ? 0 : $lastKeyIndex + 1);
+        }
+
         $address = (new Iota())->generateAddress($this, $newKeyIndex);
 
         if ($address) {

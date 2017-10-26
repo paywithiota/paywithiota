@@ -56,5 +56,7 @@ Route::group(['middleware' => 'web'], function ($router){
         Route::get('/addresses/{address}', 'AddressesController@show')->name("Addresses.Show");
         Route::get('/users/search', 'UsersController@searchUserEmail')->name("Users.SearchByEmail");
         Route::get('/account', 'UsersController@getAccountData')->name("Users.Account");
+        Route::post('/users/update/key_index', 'UsersController@updateLastKeyIndex')->name("Users.Update.LastKeyIndex");
+        Route::get('/users/get/key_index', 'UsersController@getLastKeyIndex')->name("Users.Get.LastKeyIndex");
     });
 });
