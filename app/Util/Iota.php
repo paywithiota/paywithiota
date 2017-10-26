@@ -264,7 +264,7 @@ class Iota
      *
      * @return array
      */
-    public function unit($amountIota, $lowest = 0.1, $return = 'text')
+    public function unit($amountIota, $lowest = 1, $return = 'text')
     {
         $finalAmount = [
             'amount' => $amountIota,
