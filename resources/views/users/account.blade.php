@@ -9,8 +9,8 @@
 
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        @if($totalAddresses > 0)
-                            <p>It can take upto {{ ceil(($totalAddresses * 5) / 60) }} minute(s) to fetch your balance Total of {{ $totalAddresses }} addresses
+                        @if($user->last_key_index > 0)
+                            <p>It can take upto {{ ceil(($user->last_key_index * 5) / 60) }} minute(s) to fetch your balance Total of {{ $user->last_key_index }} addresses
                                 are being checked for balance. </p>
                         @endif
                         <h2>Current Balance: <span id="accountBalance">Loading....</span></h2>
