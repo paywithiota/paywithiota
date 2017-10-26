@@ -33,36 +33,37 @@
                             </thead>
                             <tbody>
                             @foreach($payments as $payment)
-
-                                @if(request()->get('balance'))
-                                    @php
-                                        $addressBalance =  $payment->address->getBalance();
-                                        $balance += $addressBalance;
-                                    @endphp
-                                @endif
-
-                                <tr class="{{ $payment->status ? 'status-done' : 'status-pending' }}">
-                                    <th scope="row"><a
-                                                href="{{ route("Payments.Show", ["payment" => base64_encode($payment->id)]) }}">{{ base64_encode($payment->id) }}</a>
-                                    </th>
-                                    <td>{{ $payment->invoice_id }}</td>
-                                    <td>{{ $payment->sender && $payment->sender->id != auth()->user()->id ? $payment->sender->email: "You"  }}</td>
-                                    <td>{{ $payment->user_id == auth()->user()->id ? "You" : $payment->receiver->email }}</td>
-
-                                    <td><a href="https://thetangle.org/address/{{$payment->address->address}}"
-                                           target="_blank">{{ substr($payment->address->address, 0, 7) . '.....' .  substr($payment->address->address, -7, strlen($payment->address->address)) }}</a>
-                                    </td>
-                                    <td>{{ (new \App\Util\Iota())->unit($payment->price_iota) }}OTA</td>
-
+                                @if($payment->address)
                                     @if(request()->get('balance'))
-                                        <td>{{ (new \App\Util\Iota())->unit($addressBalance) }}</td>
+                                        @php
+                                            $addressBalance =  $payment->address->getBalance();
+                                            $balance += $addressBalance;
+                                        @endphp
                                     @endif
-                                    <td>{{ $payment->status ? 'Done' : 'Pending' }}</td>
-                                    <td title="{{$payment->created_at->format('Y-m-d H:i:s')}} UTC">{{ $payment->created_at->diffForHumans()  }}</td>
-                                    <td>
-                                        <span style="color:{{ $payment->user_id != auth()->user()->id ? "red" : 'green' }}"> {{ $payment->user_id == auth()->user()->id ? "IN" : "OUT"  }}</span>
-                                    </td>
-                                </tr>
+
+                                    <tr class="{{ $payment->status ? 'status-done' : 'status-pending' }}">
+                                        <th scope="row"><a
+                                                    href="{{ route("Payments.Show", ["payment" => base64_encode($payment->id)]) }}">{{ base64_encode($payment->id) }}</a>
+                                        </th>
+                                        <td>{{ $payment->invoice_id }}</td>
+                                        <td>{{ $payment->sender && $payment->sender->id != auth()->user()->id ? $payment->sender->email: "You"  }}</td>
+                                        <td>{{ $payment->user_id == auth()->user()->id ? "You" : $payment->receiver->email }}</td>
+
+                                        <td><a href="https://thetangle.org/address/{{$payment->address->address}}"
+                                               target="_blank">{{ substr($payment->address->address, 0, 7) . '.....' .  substr($payment->address->address, -7, strlen($payment->address->address)) }}</a>
+                                        </td>
+                                        <td>{{ (new \App\Util\Iota())->unit($payment->price_iota) }}OTA</td>
+
+                                        @if(request()->get('balance'))
+                                            <td>{{ (new \App\Util\Iota())->unit($addressBalance) }}</td>
+                                        @endif
+                                        <td>{{ $payment->status ? 'Done' : 'Pending' }}</td>
+                                        <td title="{{$payment->created_at->format('Y-m-d H:i:s')}} UTC">{{ $payment->created_at->diffForHumans()  }}</td>
+                                        <td>
+                                            <span style="color:{{ $payment->user_id != auth()->user()->id ? "red" : 'green' }}"> {{ $payment->user_id == auth()->user()->id ? "IN" : "OUT"  }}</span>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
                             </tbody>
                             @if(request()->get('balance'))
