@@ -26,7 +26,7 @@ class SparkServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $sendSupportEmailsTo = "nivesh@centire.in";
+    protected $sendSupportEmailsTo = "info@paywithiota.com";
 
     /**
      * All of the application developer e-mail addresses.
