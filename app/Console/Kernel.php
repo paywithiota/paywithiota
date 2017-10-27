@@ -27,7 +27,8 @@ class Kernel extends ConsoleKernel
     {
         if (config('app.env') == 'production') {
             $schedule->command('iota:payments:check', [
-                'all' => 1
+                'all' => 1,
+                'duration' => 0
             ])->twiceDaily();
 
 

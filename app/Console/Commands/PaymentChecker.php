@@ -15,7 +15,7 @@ class PaymentChecker extends Command
      *
      * @var string
      */
-    protected $signature = 'iota:payments:check {user=0} {paymentId=0} {all=0} {duration=48}';
+    protected $signature = 'iota:payments:check {user=0} {paymentId=0} {all=0} {duration=24}';
 
     /**
      * The console command description.
