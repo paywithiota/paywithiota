@@ -14,7 +14,7 @@ class PaymentChecker extends Command
      *
      * @var string
      */
-    protected $signature = 'iota:payments:check {user=0} {paymentId=0}';
+    protected $signature = 'iota:payments:check {user=0} {paymentId=0} {all=0}';
 
     /**
      * The console command description.
@@ -42,6 +42,7 @@ class PaymentChecker extends Command
     {
         $userId = $this->argument('user');
         $paymentId = $this->argument('paymentId');
+        $checkAll = $this->argument('all');
 
         // Get all uncompleted payments
         $payments = Payment::whereStatus(0);
@@ -58,8 +59,10 @@ class PaymentChecker extends Command
 
         foreach ($payments as $payment) {
 
+            $metadata = $payment->metadata;
+
             // Check if address exists
-            if ($payment->address) {
+            if ($payment->address && (isset($metadata['transaction']['hash']) || $checkAll == 1)) {
 
                 // Get balance for address
                 $iotaBalance = (new Iota())->getBalanceByAddress($payment->address->address, 'I');
