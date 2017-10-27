@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Events\PaymentCompleted;
 use App\Payment;
 use App\Util\Iota;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class PaymentChecker extends Command
@@ -14,7 +15,7 @@ class PaymentChecker extends Command
      *
      * @var string
      */
-    protected $signature = 'iota:payments:check {user=0} {paymentId=0} {all=0}';
+    protected $signature = 'iota:payments:check {user=0} {paymentId=0} {all=0} {duration=48}';
 
     /**
      * The console command description.
@@ -43,6 +44,7 @@ class PaymentChecker extends Command
         $userId = $this->argument('user');
         $paymentId = $this->argument('paymentId');
         $checkAll = $this->argument('all');
+        $duration = $this->argument('duration');
 
         // Get all uncompleted payments
         $payments = Payment::whereStatus(0);
@@ -53,6 +55,10 @@ class PaymentChecker extends Command
 
         if ($paymentId) {
             $payments = $payments->whereId($paymentId);
+        }
+
+        if ($duration) {
+            $payments->whereDate("updated_at", '>=', Carbon::now()->subHours($duration));
         }
 
         $payments = $payments->get();
