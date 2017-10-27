@@ -47,7 +47,7 @@
                                         </th>
                                         <td>{{ $payment->invoice_id }}</td>
                                         <td>{{ $payment->sender && $payment->sender->id != auth()->user()->id ? $payment->sender->email: "You"  }}</td>
-                                        <td>{{ $payment->user_id == auth()->user()->id ? "You" : $payment->receiver->email }}</td>
+                                        <td>{{ $payment->user_id == auth()->user()->id ? $payment->address->user_id ? "You" : "Address" : $payment->receiver->email }}</td>
 
                                         <td><a href="https://thetangle.org/address/{{$payment->address->address}}"
                                                target="_blank">{{ substr($payment->address->address, 0, 7) . '.....' .  substr($payment->address->address, -7, strlen($payment->address->address)) }}</a>

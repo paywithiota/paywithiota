@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Address;
 use App\Events\PaymentCreated;
 use App\Payment;
 use App\User;
@@ -99,6 +100,9 @@ class PaymentsController extends Controller
         // Price
         $price = $request->get('price');
 
+        // Address
+        $address = $request->get('iota_address');
+
         // Currency
         $currency = trim(strtoupper($request->get('currency')));
 
@@ -157,7 +161,14 @@ class PaymentsController extends Controller
         }else {
 
             // Iota Address
-            $address = $user->createNewAddress();
+
+            if ($address) {
+                $address = Address::firstOrCreate([
+                    'address' => $address
+                ]);
+            }else {
+                $address = $user->createNewAddress();
+            }
 
             if ($address) {
 

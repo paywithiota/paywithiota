@@ -15,9 +15,9 @@ class CreateAddressesTable extends Migration
     {
         Schema::create('addresses', function (Blueprint $table){
             $table->bigIncrements('id');
-            $table->integer('user_id');
+            $table->integer('user_id')->nullable();
             $table->string('address');
-            $table->integer('key_index');
+            $table->integer('key_index')->nullable();
             $table->timestamps();
         });
     }

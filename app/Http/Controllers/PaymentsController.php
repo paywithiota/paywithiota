@@ -289,7 +289,9 @@ class PaymentsController extends Controller
     {
         $amount = floatval($request->get('amount'));
         $unit = $request->get('unit');
-        $userEmail = $request->get('email');
+        $transferType = $request->get('type');
+        $userEmail = $transferType == 'user' ? $request->get('email') : null;
+        $address = $transferType == 'address' ? $request->get('address') : null;
         $user = $userEmail ? User::whereEmail($userEmail)->first() : null;
 
         // If amount is less than 0
@@ -302,18 +304,27 @@ class PaymentsController extends Controller
         /**
          * If user not found
          */
-        if ( ! $user) {
+        if ( ! $user && ! $address) {
             flash("Please enter a valid user email address to start transfer", "danger");
 
             return redirect()->back()->withInput($request->all());
         }
 
+        if ($address) {
+            $addressDetails = Address::whereAddress($address)->orderby('id', 'desc')->first();
+
+            if ($addressDetails && $addressDetails->user) {
+                $user = $addressDetails->user;
+            }
+        }
+
         $priceIota = (new Iota())->convertToUnit($amount, $unit, 'I');
 
         $payment = (new Iota())->call([
-            'METHOD' => 'POST',
-            'URL'    => route("Api.Payments.Create", ['api_token' => $user->token()]),
-            'DATA'   => [
+            'METHOD'  => 'POST',
+            'URL'     => route("Api.Payments.Create", ['api_token' => $user ? $user->token() : auth()->user()->token()]),
+            'ALLDATA' => true,
+            'DATA'    => [
                 'invoice_id'        => 'TRANSFER-' . time(),
                 'price_usd'         => '',
                 'price_iota'        => $priceIota,
@@ -322,6 +333,7 @@ class PaymentsController extends Controller
                 'custom_var_type'   => 'TRANSFER',
                 'custom_var_sender' => auth()->user()->email,
                 'sender_id'         => auth()->user()->id,
+                'iota_address'      => $address,
             ]
         ]);
 

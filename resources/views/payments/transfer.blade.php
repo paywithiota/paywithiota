@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6 col-sm-offset-3">
-                <h1 class="text-center">Send To PayWithIOTA.com User</h1>
+                <h1 class="text-center">Transfer IOTA to PayWithIOTA.com user or an Address</h1>
 
                 <div class="panel panel-default">
                     <div class="panel-heading">Enter email, amount and select IOTA unit. As soon as you click "Create Transfer Request" button, you will be
@@ -16,9 +16,25 @@
                             <form method="post" action="{{ route("Payments.Transfer") }}">
                                 <div class='form-row'>
                                     <div class='form-group required'>
+                                        <label class='control-label' for="transferType">Send To: </label>
+                                        <select id="transferType" name="type" class='form-control'>
+                                            <option value="user" selected>PayWithIOTA.com User</option>
+                                            <option value="address">IOTA Address</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class='form-row user-email-holder'>
+                                    <div class='form-group required'>
                                         <label class='control-label' for="transferUserEmailAutocomplete">PayWithIOTA.com Email: </label>
-                                        <input id="transferUserEmailAutocomplete" name="email" placeholder="john@snow.com" class='form-control' required
+                                        <input id="transferUserEmailAutocomplete" name="email" placeholder="john@snow.com" class='form-control'
                                                type='email'>
+                                    </div>
+                                </div>
+                                <div class='form-row iota-address-input-holder' style="display: none;">
+                                    <div class='form-group required'>
+                                        <label class='control-label' for="transferUserEmailAutocomplete">IOTA Address: </label>
+                                        <input id="iotaAddress" name="address" placeholder="" class='form-control'
+                                               type='text'>
                                     </div>
                                 </div>
                                 <div class='form-row'>
@@ -57,5 +73,27 @@
 @section('scripts')
     <script>
         routes['Users.SearchByEmail'] = "{{ route("Users.SearchByEmail") }}";
+    </script>
+@endsection
+
+@section('before-body-end')
+    <script>
+        $( document ).on( "change", "#transferType", function()
+        {
+            var $transferType = $( this ).val();
+
+            if( $transferType === "address" )
+            {
+                $( '.user-email-holder' ).hide();
+                $( '.iota-address-input-holder' ).show();
+                $( '#transferUserEmailAutocomplete' ).val( '' );
+            }
+            else
+            {
+                $( '.user-email-holder' ).show();
+                $( '.iota-address-input-holder' ).hide();
+                $( '#iotaAddress' ).val( '' );
+            }
+        } );
     </script>
 @endsection
