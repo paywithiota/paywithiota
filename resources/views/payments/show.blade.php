@@ -115,6 +115,9 @@
 @endsection
 
 @section('before-body-end')
+
+    <script src="{{ asset("/js/jquery.qrcode.min.js") }}" type="text/javascript"></script>
+
     <script>
 
         var amount = '{{ (new \App\Util\Iota())->unit($payment->price_iota) }}OTA';

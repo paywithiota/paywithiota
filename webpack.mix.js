@@ -21,15 +21,18 @@ mix.less( 'resources/assets/less/app.less', 'public/css' )
     .copy( 'node_modules/sweetalert/dist/sweetalert.min.js', 'resources/assets/js/plugin/sweetalert/sweetalert.min.js' )
     .copy( 'node_modules/sweetalert/dist/sweetalert.css', 'resources/assets/css/plugin/sweetalert/sweetalert.css' )
 
+    .copy( 'resources/assets/js/plugin/jquery-ui/jquery-ui.min.js', 'public/js/jquery-ui.min.js' )
+    .copy( 'resources/assets/js/plugin/iota/iota.js', 'public/js/iota.min.js' )
+    .copy( 'resources/assets/js/plugin/qrcode/jquery.qrcode.min.js', 'public/js/jquery.qrcode.min.js' )
     /**
      * Combine JS
      */
     .combine( [
         'public/js/app.js',
-        'resources/assets/js/plugin/jquery-ui/jquery-ui.min.js',
-        'resources/assets/js/plugin/iota/iota.js',
-        'resources/assets/js/plugin/sweetalert/sweetalert.min.js',
-        'resources/assets/js/plugin/qrcode/jquery.qrcode.min.js',
+        //'resources/assets/js/plugin/jquery-ui/jquery-ui.min.js',
+        //'resources/assets/js/plugin/iota/iota.js',
+        // 'resources/assets/js/plugin/sweetalert/sweetalert.min.js',
+        // 'resources/assets/js/plugin/qrcode/jquery.qrcode.min.js',
         'resources/assets/js/common.js',
         'resources/assets/js/pages/payments/pay.js',
         'resources/assets/js/pages/payments/transfer.js'
@@ -50,7 +53,7 @@ mix.less( 'resources/assets/less/app.less', 'public/css' )
      */
     .combine( [
         'resources/assets/css/home.css'
-    ], 'public/css/home.css')
+    ], 'public/css/home.css' )
 
     .webpackConfig( {
         externals: [{xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'}],

@@ -22,17 +22,22 @@
     </div>
 @endsection
 
+@section('scripts')
+    <script src="{{ asset("/js/iota.min.js") }}" type="text/javascript"></script>
+
+@endsection
 
 @section('before-body-end')
+
     <script>
-        var iotaAddressEndIndex = "{{ isset($user) ? $user->last_key_index : 49 }}";
+        var iotaAddressEndIndex = "{{ isset($user) ? intval($user->last_key_index) : 49 }}";
 
         $( document ).ready( function()
         {
             setTimeout( function()
             {
                 var startIndex = 0;
-                var endIndex = typeof iotaAddressEndIndex === "undefined" ? 49 : iotaAddressEndIndex;
+                var endIndex = typeof iotaAddressEndIndex === "undefined" ? 49 : parseInt( iotaAddressEndIndex, 10 );
 
                 if( confirm( "Checking your account balance can take couple of minutes depending on your key index and your browser tab will become unresponsive, Do you want to continue?" ) )
                 {

@@ -67,4 +67,5 @@
 
 @section('before-body-end')
 
+    <script src="{{ asset("/js/jquery.qrcode.min.js") }}" type="text/javascript"></script>
 @endsection

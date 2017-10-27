@@ -77,6 +77,7 @@
 @endsection
 
 @section('before-body-end')
+    <script src="{{ asset("/js/jquery-ui.min.js") }}" type="text/javascript"></script>
     <script>
         $( document ).on( "change", "#transferType", function()
         {
@@ -95,5 +96,27 @@
                 $( '#iotaAddress' ).val( '' );
             }
         } );
+
+        $( document ).ready( function()
+        {
+            $( "#transferUserEmailAutocomplete" ).autocomplete( {
+                source: function( request, callback )
+                {
+                    $.ajax( {
+                        url: routes['Users.SearchByEmail'],
+                        dataType: "json",
+                        data: {
+                            term: request.term
+                        },
+                        success: function( response )
+                        {
+                            callback( response.data );
+                        }
+                    } );
+                },
+                minLength: 3
+            } );
+        } );
+
     </script>
 @endsection

@@ -103,10 +103,14 @@
         routes['Users.Update.LastKeyIndex'] = "{{route("Users.Update.LastKeyIndex")}}";
         routes['Users.Get.LastKeyIndex'] = "{{route("Users.Get.LastKeyIndex")}}";
     </script>
+
+    <script src="{{ asset("/js/iota.min.js") }}" type="text/javascript"></script>
+
 @endsection
 
 @section('before-body-end')
 
+    <script src="{{ asset("/js/jquery.qrcode.min.js") }}" type="text/javascript"></script>
     <script>
 
 

@@ -3,21 +3,36 @@
  */
 $( '.qr-code-holder' ).each( function()
 {
-    var width = parseInt( $( this ).data( 'width' ), 10 );
-    var height = parseInt( $( this ).data( 'height' ), 10 );
-    var content = $( this ).data( 'content' );
+    createQR( $( this ) );
+} );
+
+function createQR( $object )
+{
+    var width = parseInt( $object.data( 'width' ), 10 );
+    var height = parseInt( $object.data( 'height' ), 10 );
+    var content = $object.data( 'content' );
 
     if( typeof content === "object" )
     {
         content = JSON.stringify( content )
     }
 
-    $( this ).qrcode( {
-        width: width > 0 ? width : 200,
-        height: height > 0 ? height : 200,
-        text: content
-    } );
-} );
+    try
+    {
+        $object.qrcode( {
+            width: width > 0 ? width : 200,
+            height: height > 0 ? height : 200,
+            text: content
+        } );
+    }
+    catch( error )
+    {
+        setTimeout( function()
+        {
+            createQR( $object )
+        }, 3000 );
+    }
+}
 
 /**
  * Url query param
@@ -46,15 +61,18 @@ function queryParam( uri, key, value )
 var iotaLib = window.IOTA;
 var iota = null;
 
-const currentProviderProxy = new Proxy( {
-    currentProvider: null
-}, {
-    set: function( obj, prop, value )
-    {
-        obj[prop] = value;
-        iota = new iotaLib( {'provider': iotaNodeUrl} );
-        return true
-    }
-} );
+if( typeof iotaLib !== "undefined" )
+{
+    const currentProviderProxy = new Proxy( {
+        currentProvider: null
+    }, {
+        set: function( obj, prop, value )
+        {
+            obj[prop] = value;
+            iota = new iotaLib( {'provider': iotaNodeUrl} );
+            return true
+        }
+    } );
 
-currentProviderProxy.currentProvider = iotaNodeUrl;
+    currentProviderProxy.currentProvider = iotaNodeUrl;
+}
