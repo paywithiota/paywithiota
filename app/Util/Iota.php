@@ -106,6 +106,57 @@ class Iota
         return $address;
     }
 
+    /**
+     * Check if a transaction is confirmed on address
+     *
+     * @param $address
+     * @param $transactionHash
+     */
+    public function isConfirmed($address, $transactionHash)
+    {
+        try{
+            $transactions = $this->call([
+                'URL'    => (new Iota())->getWorkingNode(),
+                "METHOD" => "POST",
+                'DATA'   => [
+                    "command"   => "findTransactions",
+                    "addresses" => [
+                        $address
+                    ],
+                ]
+            ]);
+
+            if (isset($transactions->hashes) && $transactions->hashes) {
+
+                $tip = end($transactions->hashes);
+
+                $inclusionStates = $this->call([
+                    'URL'    => (new Iota())->getWorkingNode(),
+                    "METHOD" => "POST",
+                    'DATA'   => [
+                        "command"      => "getInclusionStates",
+                        "transactions" => [
+                            $transactionHash
+                        ],
+                        'tips'         => [
+                            $tip
+                        ]
+                    ]
+                ]);
+
+                $inclusionStates = $inclusionStates && isset($inclusionStates->states) ? $inclusionStates->states : null;
+
+                if ($inclusionStates && isset($inclusionStates['0']) && $inclusionStates['0'] == 1) {
+                    return true;
+                }
+            }
+        }catch (\Exception $e){
+
+        }
+
+        return false;
+    }
+
 
     /**
      * Get IOTA balance for an address

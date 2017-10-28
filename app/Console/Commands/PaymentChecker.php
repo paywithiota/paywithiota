@@ -83,8 +83,15 @@ class PaymentChecker extends Command
                     // Get balance for address
                     $iotaBalance = (new Iota())->getBalanceByAddress($payment->address->address, 'I');
 
+                    // Is the transaction really confirmed
+                    if (isset($metadata['transaction']['hash'])) {
+                        $isConfirmed = (new Iota())->isConfirmed($payment->address->address, $metadata['transaction']['hash']);
+                    }else {
+                        $isConfirmed = $iotaBalance >= $payment->price_iota;
+                    }
+
                     // If balance is greater or equals to what it was supposed to
-                    if ($iotaBalance >= $payment->price_iota) {
+                    if ($isConfirmed) {
 
                         // Update paymetn status as done
                         $payment->update(['status' => 1]);
