@@ -148,7 +148,7 @@ if( currentPageName === 'PaymentsPay' )
                     endIndex = parseInt( endIndex, 10 );
 
                     // Get inputs by seed
-                    iota.api.getInputs( accountSeed, {start: startIndex, end: endIndex}, function( error, inputs )
+                    iota.api.getInputs( accountSeed, {start: startIndex, end: endIndex + 1}, function( error, inputs )
                     {
                         if( error )
                         {
@@ -203,7 +203,7 @@ if( currentPageName === 'PaymentsPay' )
             } ) );
         }
 
-        var $nextKeyIndex = $maxIndex + 1;
+        var $nextKeyIndex = $maxIndex;
 
         // Specify option for faster generating new address
         var options = {

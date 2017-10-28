@@ -41,7 +41,7 @@
 
                 if( confirm( "Checking your account balance can take couple of minutes depending on your key index and your browser tab will become unresponsive, Do you want to continue?" ) )
                 {
-                    iota.api.getInputs( "{{$user->iota_seed}}", {start: startIndex, end: endIndex}, function( error, data )
+                    iota.api.getInputs( "{{$user->iota_seed}}", {start: startIndex, end: endIndex + 1}, function( error, data )
                     {
                         if( error )
                         {
