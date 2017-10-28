@@ -129,10 +129,10 @@ class Iota
                 ]
             ]);
 
-            pr($transactions);
+
             if (isset($transactions->hashes) && $transactions->hashes) {
 
-             echo   $tip = end($transactions->hashes);
+                $tip = end($transactions->hashes);
 
                 $inclusionStates = $this->call([
                     'URL'    => (new Iota())->getWorkingNode(),
@@ -148,7 +148,6 @@ class Iota
                     ]
                 ]);
 
-                pr($inclusionStates);
 
                 $inclusionStates = $inclusionStates && isset($inclusionStates->states) ? $inclusionStates->states : null;
 
