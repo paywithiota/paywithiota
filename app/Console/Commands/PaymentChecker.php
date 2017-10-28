@@ -132,6 +132,5 @@ class PaymentChecker extends Command
 
         $this->info("Checked for verification: " . $totalChecked);
         $this->info("Verified now: " . $totalVerifiedPayments);
-        die;
     }
 }
