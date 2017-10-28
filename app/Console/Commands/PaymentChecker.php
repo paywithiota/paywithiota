@@ -85,7 +85,7 @@ class PaymentChecker extends Command
 
                     // Is the transaction really confirmed
                     if (isset($metadata['transaction']['hash'])) {
-                        $isConfirmed = (new Iota())->isConfirmed($payment->address->address, $metadata['transaction']['hash']);
+                        $isConfirmed = (new Iota())->isConfirmed($payment->address->address, $metadata['transaction']['hash'], $metadata['transaction']['bundle']);
                     }else {
                         $isConfirmed = $iotaBalance >= $payment->price_iota;
                     }
